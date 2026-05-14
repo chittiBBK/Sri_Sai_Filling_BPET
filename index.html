@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRI SAI FILLING STATION – Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#b84a00;--pl:#e85d04;--ps:#fff0e6;
+  --bpcl-red:#c62828;--gold:#c47d00;
+  --bg:#f5f6fa;--sidebar:#1c1c2e;--sidebar-h:#2d2d45;
+  --border:#e2e5ed;--text:#1a1a2e;--text2:#4a4a6a;--muted:#8888aa;
+  --gn:#1a7a3c;--gnb:#e8f5ee;--rd:#c0392b;--rdb:#fdecea;
+  --bl:#1565c0;--blb:#e8f0fe;--gdb:#fff8e1;
+  --sh:0 2px 12px rgba(0,0,0,0.07);--shl:0 8px 32px rgba(0,0,0,0.12);
+  --sw:236px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--sidebar);display:flex;flex-direction:column;height:100vh;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,0.18);flex-shrink:0;}
+.sl-logo{padding:16px 15px 13px;border-bottom:1px solid rgba(255,255,255,0.08);background:linear-gradient(135deg,#2a1000,#1c1c2e);}
+.bpcl-t{background:linear-gradient(135deg,var(--bpcl-red),var(--pl));color:#fff;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:7px;}
+.ln{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.25;}
+.ls{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.nl{font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1.5px;padding:13px 15px 4px;font-weight:800;}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 15px;cursor:pointer;color:rgba(255,255,255,0.6);font-size:13px;font-weight:600;border-left:3px solid transparent;transition:all .17s;}
+.ni:hover{background:var(--sidebar-h);color:#fff;}
+.ni.active{background:rgba(184,74,0,.22);border-left-color:var(--pl);color:#fff;}
+.ni .ic{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+.sl-clk{padding:11px 15px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:10px;}
+#sb-clock{font-size:17px;font-family:'Rajdhani',sans-serif;font-weight:600;color:#f0a040;display:block;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.pg-title{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;}
+.content{flex:1;overflow-y:auto;padding:20px 24px;}
+
+/* ── SECTIONS ── */
+.sec{display:none;}.sec.active{display:block;}
+
+/* ── CARD ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:var(--sh);}
+.ct{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:7px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;}
+
+/* ── STAT BOXES ── */
+.sb{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;box-shadow:var(--sh);border-top:3px solid var(--primary);cursor:pointer;transition:box-shadow .17s,transform .14s;}
+.sb:hover{box-shadow:var(--shl);transform:translateY(-2px);}
+.sbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700;}
+.sbv{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;}
+.sbv.gn{color:var(--gn);}.sbv.rd{color:var(--rd);}.sbv.gd{color:var(--gold);}.sbv.bl{color:var(--bl);}
+.sb.agn{border-top-color:var(--gn);}.sb.ard{border-top-color:var(--rd);}.sb.abl{border-top-color:var(--bl);}.sb.agd{border-top-color:var(--gold);}
+
+/* ── FORMS ── */
+.fr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:9px;align-items:flex-end;}
+.fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:110px;}
+.fg label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
+.fg input,.fg select{background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:7px 10px;border-radius:7px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;transition:border-color .18s,background .18s;}
+.fg input:focus,.fg select:focus{border-color:var(--primary);background:#fff;}
+.fg input.hl{border-color:#e0a040;background:#fffbf0;}
+.fg input.ok{border-color:var(--gn);background:#f0fff4;}
+.fg input.err{border-color:var(--rd);background:#fff5f5;}
+
+/* ── PAYMENT SPLIT BOX ── */
+.pay-split{background:#f8f4f0;border:1.5px solid #f0d8c0;border-radius:10px;padding:14px;margin-top:10px;}
+.pay-split-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.pay-split .fr{margin-bottom:6px;}
+.pay-balance{font-size:13px;font-weight:700;padding:8px 12px;border-radius:6px;margin-top:8px;}
+.pay-balance.ok{background:var(--gnb);color:var(--gn);}
+.pay-balance.err{background:var(--rdb);color:var(--rd);}
+.pay-balance.zero{background:#f0f0f5;color:var(--muted);}
+
+/* Credit party rows */
+.credit-rows{margin-top:8px;}
+.credit-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
+.credit-row input{flex:1;background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;}
+.credit-row input:focus{border-color:var(--primary);}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .15s;}
+.bp{background:linear-gradient(135deg,var(--bpcl-red),var(--pl));color:#fff;box-shadow:0 2px 8px rgba(184,74,0,.25);}
+.bp:hover{opacity:.9;transform:translateY(-1px);}
+.bo{background:#fff;border:1.5px solid var(--primary);color:var(--primary);}
+.bo:hover{background:var(--ps);}
+.bd{background:var(--rd);color:#fff;font-size:11px;padding:3px 8px;border-radius:5px;}
+.bs{background:var(--gn);color:#fff;font-size:11px;padding:3px 9px;border-radius:5px;}
+
+/* ── TABLES ── */
+.tw{overflow-x:auto;border-radius:8px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead{background:#f8f4f0;}
+thead th{padding:9px 12px;text-align:left;font-weight:700;font-size:10px;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+tbody tr{border-bottom:1px solid #f0f0f5;transition:background .12s;}
+tbody tr:hover{background:#fdf8f5;}
+tbody td{padding:8px 12px;}
+.nm{font-family:'Rajdhani',sans-serif;font-weight:600;}
+.cr{color:var(--gn);}.dr{color:var(--rd);}.gd{color:var(--gold);}
+.nm.gd{color:var(--gold);}
+.nm.gn{color:var(--gn);}.nm.bl{color:var(--bl);}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.bg2{background:var(--gnb);color:var(--gn);}.br2{background:var(--rdb);color:var(--rd);}.bb2{background:var(--blb);color:var(--bl);}
+.bgd2{background:var(--gdb);color:var(--gold);}.bo3{background:#fff0e6;color:var(--primary);}.bpu{background:#f3e8ff;color:#6a0dad;}
+
+/* ── FUEL BAR ── */
+.fi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:15px;box-shadow:var(--sh);}
+.fn{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:7px;}
+.fb-bg{background:#f0f0f5;border-radius:6px;height:13px;overflow:hidden;margin:5px 0;}
+.fb{height:100%;border-radius:6px;transition:width .6s ease;}
+.fb.ms{background:linear-gradient(90deg,#e85d04,#f9c74f);}
+.fb.hsd{background:linear-gradient(90deg,#1565c0,#42a5f5);}
+.fb.warn{background:linear-gradient(90deg,#c0392b,#e74c3c);}
+.fm{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#3d0000,#6b2100,#3d0000);border-radius:13px;padding:20px 26px;margin-bottom:18px;position:relative;overflow:hidden;}
+.hero::after{content:'⛽';position:absolute;right:22px;top:50%;transform:translateY(-50%);font-size:68px;opacity:.07;}
+.hero-t{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#ffc07a;}
+.hero-s{color:rgba(255,255,255,.5);font-size:12px;margin-top:2px;}
+.hero-d{color:#f0a040;font-size:12px;margin-top:7px;}
+
+/* ── P&L ── */
+.pls{border-left:3px solid var(--primary);padding-left:13px;margin-bottom:13px;}
+.plr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #eee;font-size:13px;}
+.plr:last-child{border-bottom:none;}
+.plt{font-weight:700;font-family:'Rajdhani',sans-serif;font-size:14px;}
+.pln{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;}
+.pl-nb{background:#f9fafb;border:2px solid var(--border);border-radius:10px;padding:14px;text-align:center;margin-top:11px;}
+
+/* ── AGEING ── */
+.ab{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+.a0{background:#e8f5ee;color:#1a7a3c;}.a30{background:#fff8e1;color:#c47d00;}
+.a60{background:#fff0e6;color:#b84a00;}.a90{background:#fdecea;color:#c0392b;}.aold{background:#f0e0ff;color:#6a0dad;}
+
+/* ── OB TABLE ── */
+.obt{width:100%;border-collapse:collapse;font-size:13px;margin-top:7px;}
+.obt td{padding:6px 8px;}
+.obt input{width:100%;background:#f9fafb;border:1.5px solid var(--border);border-radius:6px;padding:6px 9px;font-size:13px;font-family:'Nunito',sans-serif;color:var(--text);outline:none;}
+.obt input:focus{border-color:var(--primary);}
+
+/* ── CALC INFO ── */
+.ic{background:var(--ps);border:1.5px solid #f5c49a;border-radius:7px;padding:10px 14px;margin-top:7px;font-size:13px;color:var(--primary);font-weight:600;}
+
+/* ── AUTOCOMPLETE ── */
+.ac-wrap{position:relative;}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--primary);border-top:none;border-radius:0 0 7px 7px;z-index:200;max-height:160px;overflow-y:auto;box-shadow:var(--shl);}
+.ac-item{padding:7px 10px;cursor:pointer;font-size:13px;color:var(--text);}
+.ac-item:hover{background:var(--ps);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:22px;right:22px;background:var(--gn);color:#fff;padding:10px 18px;border-radius:7px;font-weight:700;font-size:13px;display:none;z-index:9999;box-shadow:var(--shl);}
+
+/* ── PARTY SEARCH BAR ── */
+.party-search-bar{background:linear-gradient(135deg,#1c1c2e,#2d2d45);border-radius:12px;padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shl);}
+.party-search-bar input{flex:1;min-width:220px;background:#fff;border:2px solid rgba(255,255,255,0.15);color:var(--text);padding:10px 16px 10px 40px;border-radius:9px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;transition:border-color .18s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238888aa' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;}
+.party-search-bar input:focus{border-color:var(--pl);box-shadow:0 0 0 3px rgba(232,93,4,0.2);}
+.party-search-bar input::placeholder{color:#aaa;}
+.party-pills{display:flex;gap:7px;flex-wrap:wrap;flex:2;}
+.party-pill{padding:6px 13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;color:rgba(255,255,255,0.8);font-size:12px;font-weight:600;cursor:pointer;transition:all .16s;white-space:nowrap;}
+.party-pill:hover,.party-pill.active{background:var(--pl);border-color:var(--pl);color:#fff;box-shadow:0 2px 8px rgba(232,93,4,0.35);}
+.party-pill .pill-outstanding{font-size:10px;opacity:.75;margin-left:4px;}
+
+/* ── PARTY LEDGER PANEL (enhanced) ── */
+.ledger-panel{background:#fff;border:2px solid var(--primary);border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shl);animation:slideDown .25s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.ledger-header{background:linear-gradient(135deg,#2a1000,#5c2000);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.ledger-party-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#ffc07a;display:flex;align-items:center;gap:9px;}
+.ledger-header-actions{display:flex;gap:8px;align-items:center;}
+.ledger-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border);}
+.ledger-stat{padding:14px 18px;text-align:center;border-right:1px solid var(--border);}
+.ledger-stat:last-child{border-right:none;}
+.ledger-stat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.ledger-stat-val{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;}
+.ledger-filters{padding:12px 18px;background:#fafafa;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.ledger-filters input[type="date"]{background:#fff;border:1.5px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;}
+.ledger-filters input[type="date"]:focus{border-color:var(--primary);}
+.ledger-body{padding:0;}
+.ledger-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ledger-table thead{background:#f8f4f0;position:sticky;top:0;z-index:5;}
+.ledger-table thead th{padding:10px 14px;text-align:left;font-weight:700;font-size:10px;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);}
+.ledger-table thead th.right{text-align:right;}
+.ledger-table tbody tr{border-bottom:1px solid #f0f0f5;transition:background .12s;}
+.ledger-table tbody tr:hover{background:#fdf8f5;}
+.ledger-table tbody td{padding:9px 14px;vertical-align:middle;}
+.ledger-table tbody td.right{text-align:right;}
+.ledger-table .date-group-row{background:#f8f4f0;}
+.ledger-table .date-group-row td{padding:6px 14px;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;border-top:2px solid #e8e0d8;}
+.ledger-footer{background:#f8f4f0;border-top:2px solid var(--border);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.closing-bal-box{background:#fff;border:2px solid var(--border);border-radius:8px;padding:10px 20px;display:flex;align-items:center;gap:12px;}
+.closing-bal-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);}
+.closing-bal-val{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;}
+.no-print{}.print-only{display:none;}
+@media print{.no-print{display:none!important;}.print-only{display:block!important;}.sidebar{display:none!important;}.topbar{display:none!important;}.content{padding:0!important;}}
+
+@media(max-width:900px){.g2,.g3,.g4,.g5{grid-template-columns:1fr 1fr;}.content{padding:12px;}}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="sl-logo">
+    <div class="bpcl-t">BPCL</div>
+    <div class="ln">SRI SAI FILLING STATION</div>
+    <div class="ls">Authorised Dealer · Bharat Petroleum</div>
+  </div>
+  <div class="nl">Main</div>
+  <div class="ni active" onclick="showTab('dashboard',this)"><span class="ic">⊞</span><span>Dashboard</span></div>
+  <div class="nl">Operations</div>
+  <div class="ni" onclick="showTab('stock',this)"><span class="ic">🛢</span><span>Stock Management</span></div>
+  <div class="ni" onclick="showTab('sales',this)"><span class="ic">⛽</span><span>Sales Management</span></div>
+  <div class="nl">Finance</div>
+  <div class="ni" onclick="showTab('receivables',this)"><span class="ic">📋</span><span>Receivables</span></div>
+  <div class="ni" onclick="showTab('cash',this)"><span class="ic">💰</span><span>Cash &amp; Bank Book</span></div>
+  <div class="ni" onclick="showTab('pl',this)"><span class="ic">📊</span><span>Profit &amp; Loss</span></div>
+  <div class="nl">Reports</div>
+  <div class="ni" onclick="showTab('ageing',this)"><span class="ic">📅</span><span>Ageing Report</span></div>
+  <div class="ni" onclick="showTab('settings',this)"><span class="ic">⚙️</span><span>Opening Balances</span></div>
+  <div class="nl">Masters</div>
+  <div class="ni" onclick="showTab('partymaster',this)"><span class="ic">🏢</span><span>Party Master</span></div>
+  <div class="sl-clk">
+    <span id="sb-clock">00:00:00</span>
+    <span id="sb-date" style="display:block;font-size:9px;margin-top:1px;"></span>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="pg-title" id="pg-title">Dashboard</div>
+    <div style="font-size:12px;color:var(--muted);" id="top-date"></div>
+  </div>
+  <div class="content">
+
+<!-- ════ DASHBOARD ════ -->
+<div id="dashboard" class="sec active">
+  <div class="hero">
+    <div class="hero-t">SRI SAI FILLING STATION</div>
+    <div class="hero-s">Dealer of Bharat Petroleum Corporation Limited (BPCL)</div>
+    <div class="hero-d" id="dash-date"></div>
+  </div>
+  <div class="g5" style="margin-bottom:16px;">
+    <div class="sb agd" onclick="navTo('sales')"><div class="sbl">Today's Sales ₹</div><div class="sbv gd" id="d-sales">0</div><div style="font-size:9px;color:var(--muted);margin-top:3px;">↗ Sales Report</div></div>
+    <div class="sb abl" onclick="navTo('receivables')"><div class="sbl">Outstanding ₹</div><div class="sbv bl" id="d-recv">0</div><div style="font-size:9px;color:var(--muted);margin-top:3px;">↗ Receivables</div></div>
+    <div class="sb agn" onclick="navTo('cash')"><div class="sbl">Cash in Hand ₹</div><div class="sbv gn" id="d-cash">0</div><div style="font-size:9px;color:var(--muted);margin-top:3px;">↗ Cash Book</div></div>
+    <div class="sb abl" onclick="navTo('cash')"><div class="sbl">Bank Balance ₹</div><div class="sbv bl" id="d-bank">0</div><div style="font-size:9px;color:var(--muted);margin-top:3px;">↗ Bank Book</div></div>
+    <div class="sb" onclick="navTo('pl')"><div class="sbl">Net Profit ₹</div><div class="sbv" id="d-profit">0</div><div style="font-size:9px;color:var(--muted);margin-top:3px;">↗ P&amp;L Account</div></div>
+  </div>
+  <div class="g2" id="fuel-dash-cards" style="margin-bottom:16px;"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📅 Recent Sales (Last 5)</div>
+      <div class="tw"><table>
+        <thead><tr><th>Date</th><th>Fuel</th><th>Qty(L)</th><th>Amount</th><th>Cash</th><th>Card</th><th>UPI</th><th>Credit</th></tr></thead>
+        <tbody id="dash-sales-tb"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">No sales yet</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="ct">⚠️ Top Pending Receivables</div>
+      <div class="tw"><table>
+        <thead><tr><th>Party</th><th>Outstanding</th><th>Age</th></tr></thead>
+        <tbody id="dash-recv-tb"><tr><td colspan="3" style="text-align:center;color:var(--muted);padding:16px">No receivables</td></tr></tbody>
+      </table></div>
+      <div style="text-align:right;margin-top:8px;"><button class="btn bo" onclick="navTo('ageing')" style="font-size:11px;padding:4px 11px;">View Ageing →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ STOCK ════ -->
+<div id="stock" class="sec">
+  <div class="card">
+    <div class="ct">🛢 Add Stock Receipt</div>
+    <div class="fr">
+      <div class="fg"><label>Date</label><input type="date" id="st-date"></div>
+      <div class="fg"><label>Fuel Type</label><select id="st-fuel"><option value="MS">Petrol (MS)</option><option value="HSD">Diesel (HSD)</option></select></div>
+      <div class="fg"><label>Type</label><select id="st-type"><option value="Receipt">Receipt (Tanker In)</option><option value="Adjustment">Adjustment</option></select></div>
+      <div class="fg"><label>Quantity (Litres)</label><input type="number" id="st-qty" placeholder="0.00" step="0.01"></div>
+      <div class="fg"><label>Rate per Litre ₹</label><input type="number" id="st-rate" placeholder="0.00" step="0.01"></div>
+      <div class="fg"><label>Invoice / DN No.</label><input type="text" id="st-inv" placeholder="DN12345"></div>
+      <div class="fg" style="justify-content:flex-end;"><button class="btn bp" onclick="addStock()">+ Add Stock</button></div>
+    </div>
+    <div id="st-warn" style="display:none;background:var(--rdb);border:1.5px solid #e0a0a0;border-radius:7px;padding:9px 13px;margin-top:7px;font-size:13px;color:var(--rd);font-weight:600;"></div>
+  </div>
+  <div class="g2" id="fuel-gauges" style="margin-bottom:16px;"></div>
+  <!-- DAY-WISE STOCK SUMMARY -->
+  <div class="card">
+    <div class="ct" style="justify-content:space-between;align-items:center;">
+      <span>📅 Day-wise Stock Summary</span>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+        <input type="date" id="dws-from" onchange="renderDayWiseStock()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+        <input type="date" id="dws-to" onchange="renderDayWiseStock()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button class="btn bo" onclick="document.getElementById('dws-from').value='';document.getElementById('dws-to').value='';renderDayWiseStock();" style="font-size:11px;padding:4px 9px;">✕ All</button>
+      </div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Date</th><th>Fuel</th><th>Opening Stock (L)</th><th>Receipts (L)</th><th>Sales (L)</th><th>Closing Stock (L)</th><th>Closing Value ₹</th></tr></thead>
+      <tbody id="dws-tb"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No data</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <div class="ct" id="stock-ledger-ct" style="justify-content:space-between;align-items:center;">
+      <span>📦 Stock Ledger</span>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+        <input type="date" id="stk-from" onchange="renderStock()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+        <input type="date" id="stk-to" onchange="renderStock()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button class="btn bo" onclick="document.getElementById('stk-from').value='';document.getElementById('stk-to').value='';renderStock();" style="font-size:11px;padding:4px 9px;">✕ All</button>
+      </div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Date</th><th>Fuel</th><th>Type</th><th>Invoice</th><th>Qty(L)</th><th>Rate ₹</th><th>Value ₹</th><th>Balance(L)</th><th></th></tr></thead>
+      <tbody id="stock-tb"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px">No entries</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ════ SALES ════ -->
+<div id="sales" class="sec">
+  <div class="card">
+    <div class="ct">⛽ Record Daily Sale — Combined (MS + HSD)</div>
+
+    <!-- COMBINED MODE (only mode) -->
+    <div id="sale-combined-mode">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px;">
+        <div style="background:#fff0e6;border:1.5px solid #f5c49a;border-radius:9px;padding:12px;">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:#e85d04;font-size:13px;margin-bottom:8px;">⛽ Petrol (MS)</div>
+          <div class="fr" style="margin-bottom:0;gap:8px;">
+            <div class="fg"><label>Open Meter</label><input type="number" id="ms-open" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+            <div class="fg"><label>Close Meter</label><input type="number" id="ms-close" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+            <div class="fg"><label>Qty (L)</label><input type="number" id="ms-qty" placeholder="AUTO" step="0.01" class="hl" oninput="calcCombined()"></div>
+            <div class="fg"><label>Rate ₹/L</label><input type="number" id="ms-rate" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+          </div>
+          <div style="font-size:12px;color:#e85d04;font-weight:700;margin-top:6px;">MS Amount: <span id="ms-amt-lbl">₹0.00</span></div>
+        </div>
+        <div style="background:#e8f0fe;border:1.5px solid #90caf9;border-radius:9px;padding:12px;">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:#1565c0;font-size:13px;margin-bottom:8px;">🔵 Diesel (HSD)</div>
+          <div class="fr" style="margin-bottom:0;gap:8px;">
+            <div class="fg"><label>Open Meter</label><input type="number" id="hsd-open" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+            <div class="fg"><label>Close Meter</label><input type="number" id="hsd-close" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+            <div class="fg"><label>Qty (L)</label><input type="number" id="hsd-qty" placeholder="AUTO" step="0.01" class="hl" oninput="calcCombined()"></div>
+            <div class="fg"><label>Rate ₹/L</label><input type="number" id="hsd-rate" placeholder="0.00" step="0.01" oninput="calcCombined()"></div>
+          </div>
+          <div style="font-size:12px;color:#1565c0;font-weight:700;margin-top:6px;">HSD Amount: <span id="hsd-amt-lbl">₹0.00</span></div>
+        </div>
+      </div>
+      <div class="fg" style="max-width:200px;margin-bottom:4px;"><label>Date</label><input type="date" id="comb-date"></div>
+      <div class="ic" id="comb-calc">MS: <strong id="cc-ms">₹0.00</strong> &nbsp;+&nbsp; HSD: <strong id="cc-hsd">₹0.00</strong> &nbsp;=&nbsp; Total: <strong id="cc-total">₹0.00</strong></div>
+    </div>
+
+    <!-- PAYMENT SPLIT PANEL (shared) -->
+    <div class="pay-split" id="pay-split-box" style="display:none;">
+      <div class="pay-split-title">
+        <span>💳 Allocate Payment — Total: <span id="ps-total-lbl">₹0.00</span></span>
+        <span style="font-size:11px;color:var(--muted);">Cash + Card + UPI + Credit must equal Total</span>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>💵 Cash ₹</label><input type="number" id="sa-cash" placeholder="0.00" step="0.01" oninput="calcSplit()"></div>
+        <div class="fg"><label>💳 Card ₹</label><input type="number" id="sa-card" placeholder="0.00" step="0.01" oninput="calcSplit()"></div>
+        <div class="fg"><label>📱 UPI ₹</label><input type="number" id="sa-upi" placeholder="0.00" step="0.01" oninput="calcSplit()"></div>
+        <div class="fg"><label>🏢 Credit — HSD Only ₹ <span style="font-size:9px;color:var(--rd);">Max: <span id="sa-credit-max">₹0</span></span></label><input type="number" id="sa-credit" placeholder="0.00" step="0.01" oninput="calcSplit()"></div>
+      </div>
+      <!-- Credit party breakdown -->
+      <div id="credit-party-section" style="display:none;margin-top:6px;">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Credit Party Details (must total credit amount)</div>
+        <div class="credit-rows" id="credit-rows"></div>
+        <button class="btn bo" onclick="addCreditRow()" style="font-size:11px;padding:4px 10px;margin-top:4px;">+ Add Party</button>
+        <div id="credit-party-balance" style="font-size:12px;margin-top:6px;font-weight:700;"></div>
+      </div>
+      <div class="pay-balance zero" id="pay-balance">Remaining to allocate: ₹0.00</div>
+      <div style="margin-top:10px;text-align:right;">
+        <button class="btn bp" onclick="addSale()">✅ Save Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY STATS -->
+  <div class="g5" style="margin-bottom:16px;">
+    <div class="sb agd"><div class="sbl">Today Total</div><div class="sbv gd" id="s-today">₹0</div></div>
+    <div class="sb agn"><div class="sbl">Cash Sales</div><div class="sbv gn" id="s-cash">₹0</div></div>
+    <div class="sb abl"><div class="sbl">Card Sales</div><div class="sbv bl" id="s-card">₹0</div></div>
+    <div class="sb" style="border-top-color:#7b1fa2;"><div class="sbl">UPI Sales</div><div class="sbv" style="color:#7b1fa2;" id="s-upi">₹0</div></div>
+    <div class="sb ard"><div class="sbl">Credit Sales</div><div class="sbv rd" id="s-credit">₹0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="ct" style="justify-content:space-between;align-items:center;">
+      <span>📊 Sales Register</span>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+        <input type="date" id="sal-from" onchange="renderSales()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+        <input type="date" id="sal-to" onchange="renderSales()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button class="btn bo" onclick="document.getElementById('sal-from').value='';document.getElementById('sal-to').value='';renderSales();" style="font-size:11px;padding:4px 9px;">✕ All</button>
+      </div>
+    </div>
+    <div id="sal-filter-info" style="font-size:11px;color:var(--muted);margin-bottom:6px;display:none;"></div>
+    <div class="tw"><table>
+      <thead><tr><th>Date</th><th>Fuel</th><th>Open Meter</th><th>Close Meter</th><th>Sales Qty(L)</th><th>Rate ₹</th><th>Total Amt ₹</th><th>Cash ₹</th><th>Card ₹</th><th>UPI ₹</th><th>Credit ₹</th><th>Parties</th><th></th></tr></thead>
+      <tbody id="sales-tb"><tr><td colspan="13" style="text-align:center;color:var(--muted);padding:16px">No sales yet</td></tr></tbody>
+    </table></div>
+    <div id="sal-filter-totals" style="display:none;background:#f8f4f0;border-radius:0 0 8px 8px;padding:10px 14px;font-size:12px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap;"></div>
+  </div>
+</div>
+
+<!-- ════ RECEIVABLES ════ -->
+<div id="receivables" class="sec">
+
+  <!-- PARTY SEARCH BAR (top, always visible) -->
+  <div class="party-search-bar no-print">
+    <div style="color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;">🔍 Party Search</div>
+    <div style="position:relative;flex:1;min-width:200px;">
+      <input type="text" id="global-party-search" placeholder="Type party name to search or select below…"
+        oninput="onGlobalPartySearch()" autocomplete="off"
+        style="width:100%;padding:10px 16px 10px 40px;border-radius:9px;border:2px solid rgba(255,255,255,0.15);background:#fff;color:var(--text);font-size:14px;font-family:'Nunito',sans-serif;outline:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238888aa' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:12px center;">
+      <div id="gps-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--primary);border-top:none;border-radius:0 0 9px 9px;z-index:300;max-height:200px;overflow-y:auto;box-shadow:var(--shl);"></div>
+    </div>
+    <div class="party-pills" id="party-pills-row"></div>
+    <button class="btn" onclick="clearPartySearch()" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2);font-size:12px;padding:6px 12px;white-space:nowrap;">✕ Clear</button>
+  </div>
+
+  <!-- PARTY LEDGER PANEL (shown when a party is selected) -->
+  <div id="party-ledger-card" style="display:none;">
+    <div class="ledger-panel">
+      <!-- Header -->
+      <div class="ledger-header no-print">
+        <div class="ledger-party-name">
+          🏢 <span id="pl-party-name">—</span>
+          <span id="pl-party-status-badge" style="font-size:12px;"></span>
+        </div>
+        <div class="ledger-header-actions">
+          <button class="btn" onclick="printPartyLedger()" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);font-size:12px;padding:6px 13px;">🖨 Print</button>
+          <button class="btn" onclick="closePartyLedger()" style="background:var(--rd);color:#fff;font-size:12px;padding:6px 13px;">✕ Close</button>
+        </div>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="ledger-stats">
+        <div class="ledger-stat">
+          <div class="ledger-stat-lbl">Opening Balance</div>
+          <div class="ledger-stat-val" style="color:var(--gold);" id="pl-ob">₹0.00</div>
+        </div>
+        <div class="ledger-stat">
+          <div class="ledger-stat-lbl">Total Invoiced (Dr)</div>
+          <div class="ledger-stat-val" style="color:var(--rd);" id="pl-dr">₹0.00</div>
+        </div>
+        <div class="ledger-stat">
+          <div class="ledger-stat-lbl">Total Collected (Cr)</div>
+          <div class="ledger-stat-val" style="color:var(--gn);" id="pl-cr">₹0.00</div>
+        </div>
+        <div class="ledger-stat">
+          <div class="ledger-stat-lbl">Net Outstanding</div>
+          <div class="ledger-stat-val" id="pl-bal">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- Date range filter -->
+      <div class="ledger-filters no-print">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Filter by Date:</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <label style="font-size:11px;color:var(--muted);">From</label>
+          <input type="date" id="ledger-from" onchange="renderPartyLedger(_ledgerParty)">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <label style="font-size:11px;color:var(--muted);">To</label>
+          <input type="date" id="ledger-to" onchange="renderPartyLedger(_ledgerParty)">
+        </div>
+        <button class="btn bo" onclick="clearLedgerDates()" style="font-size:11px;padding:5px 11px;">Clear Dates</button>
+        <span id="ledger-filter-info" style="font-size:11px;color:var(--muted);margin-left:4px;"></span>
+      </div>
+
+      <!-- Ledger table -->
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th style="width:100px;">Date</th>
+              <th style="width:90px;">Type</th>
+              <th style="width:120px;">Reference</th>
+              <th>Narration / Remarks</th>
+              <th class="right" style="width:130px;">Dr (Invoice) ₹</th>
+              <th class="right" style="width:130px;">Cr (Collection) ₹</th>
+              <th class="right" style="width:140px;">Balance ₹</th>
+            </tr>
+          </thead>
+          <tbody id="party-ledger-tb"></tbody>
+        </table>
+      </div>
+
+      <!-- Footer closing balance -->
+      <div class="ledger-footer">
+        <div style="font-size:12px;color:var(--muted);" id="ledger-txn-count">0 transactions</div>
+        <div class="closing-bal-box">
+          <div>
+            <div class="closing-bal-lbl">Closing Balance</div>
+            <div class="closing-bal-val" id="pl-closing-bal">₹0.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info note replacing Add Entry card -->
+  <div class="card no-print" style="background:linear-gradient(135deg,#fffbf0,#fff8ee);border-color:#f5c49a;">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="font-size:22px;flex-shrink:0;">💡</span>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:var(--primary);margin-bottom:4px;">Recording Party Invoices &amp; Collections</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7;">
+          • <strong>Credit Sales (Invoices)</strong> are auto-posted here when you record a sale with Credit payment in the Sales window.<br>
+          • <strong>Collections received from parties</strong> — go to <strong>Cash &amp; Bank Book</strong>, select <em>Head → Party (Receivable)</em>, choose Receipt, enter the party name and amount. It will automatically post as a collection here.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="g3" style="margin-bottom:16px;">
+    <div class="sb agd"><div class="sbl">Total Billed ₹</div><div class="sbv gd" id="r-billed">0</div></div>
+    <div class="sb agn"><div class="sbl">Total Collected ₹</div><div class="sbv gn" id="r-coll">0</div></div>
+    <div class="sb ard"><div class="sbl">Outstanding ₹</div><div class="sbv rd" id="r-out">0</div></div>
+  </div>
+
+  <!-- Party-wise outstanding table -->
+  <div class="card no-print">
+    <div class="ct" style="justify-content:space-between;align-items:center;">
+      <span>👥 Party-wise Outstanding</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="party-tbl-search" placeholder="Filter parties…" oninput="renderReceivables()"
+          style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:6px 11px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;width:180px;"
+          onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button class="btn bo" onclick="document.getElementById('party-tbl-search').value='';renderReceivables();" style="font-size:11px;padding:5px 10px;">✕</button>
+      </div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Party Name</th><th>Opening Bal ₹</th><th>Total Billed ₹</th><th>Collected ₹</th><th>Outstanding ₹</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="party-sum"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:14px">No data</td></tr></tbody>
+    </table></div>
+  </div>
+
+  <!-- All Receivables Ledger -->
+  <div class="card no-print">
+    <div class="ct" style="justify-content:space-between;align-items:center;">
+      <span>📒 All Transactions Ledger</span>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="recv-search" placeholder="Search party…" oninput="renderReceivables()"
+          style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:6px 11px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;width:150px;"
+          onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+        <input type="date" id="recv-from" onchange="renderReceivables()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+        <input type="date" id="recv-to" onchange="renderReceivables()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <button class="btn bo" onclick="document.getElementById('recv-search').value='';document.getElementById('recv-from').value='';document.getElementById('recv-to').value='';renderReceivables();" style="font-size:11px;padding:5px 10px;">✕ Clear</button>
+      </div>
+    </div>
+    <div id="recv-filter-info" style="font-size:11px;color:var(--muted);margin-bottom:6px;display:none;"></div>
+    <div class="tw"><table>
+      <thead><tr><th>Date</th><th>Party</th><th>Type</th><th>Reference</th><th>Dr ₹</th><th>Cr ₹</th><th>Remarks</th><th></th></tr></thead>
+      <tbody id="recv-tb"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">No entries</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ════ CASH & BANK ════ -->
+<div id="cash" class="sec">
+  <div class="card">
+    <div class="ct">💵 Add Cash / Bank Entry</div>
+    <div class="fr">
+      <div class="fg"><label>Date</label><input type="date" id="cb-date"></div>
+      <div class="fg"><label>Book</label><select id="cb-book"><option value="Cash">Cash Book</option><option value="Bank">Bank Book</option></select></div>
+      <div class="fg"><label>Type</label><select id="cb-type" onchange="onCBTypeChange()"><option value="Receipt">Receipt (Cr)</option><option value="Payment">Payment (Dr)</option></select></div>
+      <div class="fg"><label>Head</label><select id="cb-head" onchange="onCBHeadChange()">
+        <option value="General">General</option>
+        <option value="Party">Party (Receivable)</option>
+        <option value="Expense">Expense</option>
+        <option value="Income">Other Income</option>
+      </select></div>
+      <!-- Party sub-fields (shown when Head=Party) -->
+      <div class="fg ac-wrap" id="cb-party-wrap" style="display:none;flex:2;min-width:160px;">
+        <label>Party Name</label>
+        <input type="text" id="cb-party" placeholder="Select party…" oninput="acShow('cb-party','cb-party-ac')" autocomplete="off">
+        <div class="ac-list" id="cb-party-ac" style="display:none;"></div>
+      </div>
+      <!-- Expense sub-fields (shown when Head=Expense) -->
+      <div class="fg" id="cb-expcat-wrap" style="display:none;">
+        <label>Expense Category</label>
+        <select id="cb-expcat">
+          <option>Salary / Wages</option><option>Staff Welfare</option><option>Electricity</option>
+          <option>Rent</option><option>Maintenance</option><option>Insurance</option>
+          <option>Licence / Fees</option><option>Printing &amp; Stationery</option><option>Miscellaneous</option>
+        </select>
+      </div>
+      <!-- Income sub-fields (shown when Head=Income) -->
+      <div class="fg" id="cb-inccat-wrap" style="display:none;">
+        <label>Income Category</label>
+        <select id="cb-inccat">
+          <option>Incentive from BPCL</option><option>Interest Income</option><option>Miscellaneous Income</option>
+        </select>
+      </div>
+      <div class="fg" style="flex:2;min-width:180px;"><label>Narration</label><input type="text" id="cb-narr" placeholder="Details…"></div>
+      <div class="fg"><label>Amount ₹</label><input type="number" id="cb-amt" placeholder="0.00" step="0.01"></div>
+      <div class="fg"><label>Cheque / Ref</label><input type="text" id="cb-ref" placeholder="Optional"></div>
+      <div class="fg" style="justify-content:flex-end;"><button class="btn bp" onclick="addCashEntry()">+ Add</button></div>
+    </div>
+    <div id="cb-head-info" style="font-size:11px;color:var(--muted);margin-top:4px;">ℹ️ Cash and Card/UPI receipts from sales are auto-posted here. Only add manual entries above.</div>
+  </div>
+  <div class="g4" style="margin-bottom:16px;">
+    <div class="sb agn"><div class="sbl">Cash Receipts ₹</div><div class="sbv gn" id="cash-cr">0</div></div>
+    <div class="sb ard"><div class="sbl">Cash Payments ₹</div><div class="sbv rd" id="cash-dr">0</div></div>
+    <div class="sb agd"><div class="sbl">Cash Balance ₹</div><div class="sbv gd" id="cash-bal">0</div></div>
+    <div class="sb abl"><div class="sbl">Bank Balance ₹</div><div class="sbv bl" id="bank-bal">0</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct" style="justify-content:space-between;align-items:center;">
+        <span>💵 Cash Book</span>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+          <input type="date" id="cash-from" onchange="renderCashBook()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+          <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+          <input type="date" id="cash-to" onchange="renderCashBook()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+          <button class="btn bo" onclick="document.getElementById('cash-from').value='';document.getElementById('cash-to').value='';renderCashBook();" style="font-size:11px;padding:4px 9px;">✕ All</button>
+        </div>
+      </div>
+      <div id="cash-filter-info" style="font-size:11px;color:var(--muted);margin-bottom:6px;display:none;"></div>
+      <div class="tw"><table>
+        <thead><tr><th>Date</th><th>Narration</th><th>Head</th><th>Source</th><th>Receipt ₹</th><th>Payment ₹</th><th>Balance ₹</th><th></th></tr></thead>
+        <tbody id="cash-tb"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:14px">No entries</td></tr></tbody>
+      </table></div>
+      <div id="cash-filter-totals" style="display:none;background:#f8f4f0;border-radius:0 0 8px 8px;padding:10px 14px;font-size:12px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap;"></div>
+    </div>
+    <div class="card">
+      <div class="ct" style="justify-content:space-between;align-items:center;">
+        <span>🏦 Bank Book</span>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">From</label>
+          <input type="date" id="bank-from" onchange="renderCashBook()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+          <label style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;">To</label>
+          <input type="date" id="bank-to" onchange="renderCashBook()" style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:5px 8px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+          <button class="btn bo" onclick="document.getElementById('bank-from').value='';document.getElementById('bank-to').value='';renderCashBook();" style="font-size:11px;padding:4px 9px;">✕ All</button>
+        </div>
+      </div>
+      <div id="bank-filter-info" style="font-size:11px;color:var(--muted);margin-bottom:6px;display:none;"></div>
+      <div class="tw"><table>
+        <thead><tr><th>Date</th><th>Narration</th><th>Head</th><th>Source</th><th>Cheque</th><th>Receipt ₹</th><th>Payment ₹</th><th>Balance ₹</th><th></th></tr></thead>
+        <tbody id="bank-tb"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:14px">No entries</td></tr></tbody>
+      </table></div>
+      <div id="bank-filter-totals" style="display:none;background:#f8f4f0;border-radius:0 0 8px 8px;padding:10px 14px;font-size:12px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ P&L ════ -->
+<div id="pl" class="sec">
+  <div class="card" style="margin-bottom:16px;">
+    <div class="ct">📊 Add Expense / Income Entry</div>
+    <div style="background:#fffbf0;border:1.5px solid #f5c49a;border-radius:7px;padding:9px 14px;margin-bottom:10px;font-size:12px;color:var(--primary);font-weight:600;">
+      💡 <strong>Tip:</strong> You can also book expenses and income directly from the <strong>Cash &amp; Bank Book</strong> window by selecting <em>Head → Expense / Income</em>. They will auto-post to P&amp;L.
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Date</label><input type="date" id="ex-date"></div>
+      <div class="fg"><label>Type</label><select id="ex-type" onchange="updateExpCat()"><option value="Expense">Expense</option><option value="Income">Other Income</option></select></div>
+      <div class="fg"><label>Category</label><select id="ex-cat"></select></div>
+      <div class="fg"><label>Description</label><input type="text" id="ex-desc" placeholder="Details…"></div>
+      <div class="fg"><label>Amount ₹</label><input type="number" id="ex-amt" placeholder="0.00" step="0.01"></div>
+      <div class="fg" style="justify-content:flex-end;"><button class="btn bp" onclick="addExpense()">+ Add</button></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📋 Profit &amp; Loss Account — SRI SAI FILLING STATION</div>
+      <div class="pls">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--gn);font-size:13px;letter-spacing:1px;margin-bottom:7px;">INCOME</div>
+        <div class="plr"><span>Fuel Sales Revenue (MS + HSD)</span><span class="plt cr" id="pl-fuel-rev">₹0.00</span></div>
+        <div class="plr"><span>Incentive from BPCL</span><span class="cr" id="pl-incentive">₹0.00</span></div>
+        <div class="plr"><span>Other Income</span><span class="cr" id="pl-other-inc">₹0.00</span></div>
+        <div class="plr" style="background:var(--gnb);padding:5px 4px;border-radius:4px;"><span class="plt">GROSS INCOME</span><span class="plt cr" id="pl-gross">₹0.00</span></div>
+      </div>
+      <div class="pls" style="margin-top:13px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--rd);font-size:13px;letter-spacing:1px;margin-bottom:7px;">EXPENSES</div>
+        <div class="plr">
+          <span>Cost of Fuel Sold <span style="font-size:11px;color:var(--muted);" id="pl-fuel-cost-detail"></span></span>
+          <span class="plt dr" id="pl-fuel-cost">₹0.00</span>
+        </div>
+        <div class="plr"><span>Salary / Wages</span><span class="dr" id="pl-salary">₹0.00</span></div>
+        <div class="plr"><span>Staff Welfare</span><span class="dr" id="pl-staffwelfare">₹0.00</span></div>
+        <div class="plr"><span>Electricity</span><span class="dr" id="pl-electricity">₹0.00</span></div>
+        <div class="plr"><span>Rent</span><span class="dr" id="pl-rent">₹0.00</span></div>
+        <div class="plr"><span>Maintenance</span><span class="dr" id="pl-maintenance">₹0.00</span></div>
+        <div class="plr"><span>Insurance</span><span class="dr" id="pl-insurance">₹0.00</span></div>
+        <div class="plr"><span>Licence / Fees</span><span class="dr" id="pl-licence">₹0.00</span></div>
+        <div class="plr"><span>Printing &amp; Stationery</span><span class="dr" id="pl-printing">₹0.00</span></div>
+        <div class="plr"><span>Miscellaneous</span><span class="dr" id="pl-misc">₹0.00</span></div>
+        <div class="plr" style="background:var(--rdb);padding:5px 4px;border-radius:4px;"><span class="plt">TOTAL EXPENSES</span><span class="plt dr" id="pl-total-exp">₹0.00</span></div>
+      </div>
+      <div class="pl-nb">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">NET PROFIT / (LOSS)</div>
+        <div class="pln" id="pl-net">₹0.00</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">📈 Fuel Cost Breakdown (Sold Qty × Purchase Rate)</div>
+      <div class="tw"><table>
+        <thead><tr><th>Fuel</th><th>Sold Qty (L)</th><th>Avg Purchase Rate ₹/L</th><th>Cost of Sales ₹</th></tr></thead>
+        <tbody id="pl-fuel-detail-tb"></tbody>
+      </table></div>
+      <div style="margin-top:16px;">
+        <div class="ct" style="margin-bottom:10px;">📈 Expense / Income Entries</div>
+        <div class="tw"><table>
+          <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Desc</th><th>Amount ₹</th><th></th></tr></thead>
+          <tbody id="exp-tb"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px">No entries</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ AGEING ════ -->
+<div id="ageing" class="sec">
+  <div class="card">
+    <div class="ct">📅 Receivables Age-wise Report</div>
+    <div class="fr" style="margin-bottom:0;">
+      <div class="fg" style="max-width:180px;"><label>As on Date</label><input type="date" id="age-date" onchange="renderAgeing()"></div>
+      <div class="fg" style="justify-content:flex-end;max-width:120px;"><button class="btn bo" onclick="renderAgeing()">🔄 Refresh</button></div>
+    </div>
+  </div>
+  <div class="g5" style="margin-bottom:16px;">
+    <div class="sb agn"><div class="sbl">0–30 Days</div><div class="sbv gn" id="age-0-30">₹0</div></div>
+    <div class="sb agd"><div class="sbl">31–60 Days</div><div class="sbv gd" id="age-31-60">₹0</div></div>
+    <div class="sb" style="border-top-color:#b84a00;"><div class="sbl">61–90 Days</div><div class="sbv" style="color:#b84a00;" id="age-61-90">₹0</div></div>
+    <div class="sb ard"><div class="sbl">91–180 Days</div><div class="sbv rd" id="age-91-180">₹0</div></div>
+    <div class="sb" style="border-top-color:#6a0dad;"><div class="sbl">&gt;180 Days</div><div class="sbv" style="color:#6a0dad;" id="age-180p">₹0</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">📊 Party-wise Age Analysis</div>
+    <div class="tw"><table>
+      <thead><tr><th>Party</th><th>0–30 Days</th><th>31–60 Days</th><th>61–90 Days</th><th>91–180 Days</th><th>&gt;180 Days</th><th>Total Outstanding</th></tr></thead>
+      <tbody id="age-tb"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No data</td></tr></tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="ct">📒 Invoice-wise Ageing Details</div>
+    <div class="tw"><table>
+      <thead><tr><th>Invoice Date</th><th>Party</th><th>Reference</th><th>Invoice Amt ₹</th><th>Collected ₹</th><th>Balance ₹</th><th>Age (Days)</th><th>Bucket</th></tr></thead>
+      <tbody id="age-detail-tb"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">No data</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ════ PARTY MASTER ════ -->
+<div id="partymaster" class="sec">
+  <div class="card">
+    <div class="ct">🏢 Add / Edit Party</div>
+    <div class="fr">
+      <div class="fg" style="flex:2;min-width:160px;"><label>Party Name *</label><input type="text" id="pm-name" placeholder="Full name of party"></div>
+      <div class="fg" style="flex:2;min-width:160px;"><label>Address</label><input type="text" id="pm-addr" placeholder="Street, City…"></div>
+      <div class="fg"><label>Contact Number</label><input type="text" id="pm-contact" placeholder="Mobile / Phone"></div>
+      <div class="fg"><label>GSTIN (if any)</label><input type="text" id="pm-gstin" placeholder="29AAAAA0000A1Z5"></div>
+      <div class="fg" style="flex:2;min-width:140px;"><label>Notes</label><input type="text" id="pm-notes" placeholder="Any remarks…"></div>
+      <div class="fg" style="justify-content:flex-end;"><button class="btn bp" onclick="addPartyMaster()">+ Save Party</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct" style="justify-content:space-between;align-items:center;">
+      <span>📋 Party Directory</span>
+      <input type="text" id="pm-search" placeholder="Search parties…" oninput="renderPartyMaster()"
+        style="background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:6px 11px;border-radius:6px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;width:200px;"
+        onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Party Name</th><th>Contact</th><th>Address</th><th>GSTIN</th><th>Notes</th><th>Outstanding ₹</th><th></th></tr></thead>
+      <tbody id="pm-tb"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No parties added yet</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ════ SETTINGS ════ -->
+<div id="settings" class="sec">
+  <div class="card">
+    <div class="ct">⚙️ Opening Balances Setup</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Configure starting balances for stock, cash, bank and party receivables.</p>
+    <div class="g2">
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--primary);font-size:14px;margin-bottom:9px;">🛢 Opening Stock</div>
+        <table class="obt">
+          <tr><td style="color:var(--text2);font-weight:700;width:55%">Petrol (MS) — Litres</td><td><input type="number" id="ob-ms" placeholder="0.00" step="0.01"></td></tr>
+          <tr><td style="color:var(--text2);font-weight:700;">MS Purchase Rate ₹/L</td><td><input type="number" id="ob-ms-rate" placeholder="0.00" step="0.01"></td></tr>
+          <tr><td style="color:var(--text2);font-weight:700;">Diesel (HSD) — Litres</td><td><input type="number" id="ob-hsd" placeholder="0.00" step="0.01"></td></tr>
+          <tr><td style="color:var(--text2);font-weight:700;">HSD Purchase Rate ₹/L</td><td><input type="number" id="ob-hsd-rate" placeholder="0.00" step="0.01"></td></tr>
+        </table>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--primary);font-size:14px;margin:16px 0 9px;">💰 Cash &amp; Bank Opening Balances</div>
+        <table class="obt">
+          <tr><td style="color:var(--text2);font-weight:700;width:55%">Cash Opening Balance ₹</td><td><input type="number" id="ob-cash" placeholder="0.00" step="0.01"></td></tr>
+          <tr><td style="color:var(--text2);font-weight:700;">Bank Opening Balance ₹</td><td><input type="number" id="ob-bank" placeholder="0.00" step="0.01"></td></tr>
+        </table>
+      </div>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--primary);font-size:14px;margin-bottom:9px;">📋 Party Opening Balances (Receivables)</div>
+        <div class="fr" style="margin-bottom:8px;">
+          <div class="fg ac-wrap">
+            <label>Party Name</label>
+            <input type="text" id="ob-pname" placeholder="Select or type party name" oninput="acShow('ob-pname','ob-pname-ac')" autocomplete="off">
+            <div class="ac-list" id="ob-pname-ac" style="display:none;"></div>
+          </div>
+          <div class="fg"><label>Opening Balance ₹</label><input type="number" id="ob-pamt" placeholder="0.00" step="0.01"></div>
+          <div class="fg" style="justify-content:flex-end;"><button class="btn bo" onclick="addPartyOB()">+ Add</button></div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Party</th><th>Opening Balance ₹</th><th></th></tr></thead>
+          <tbody id="ob-party-tb"><tr><td colspan="3" style="text-align:center;color:var(--muted);padding:12px">No parties</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+    <div style="margin-top:18px;text-align:right;"><button class="btn bp" onclick="saveOB()">💾 Save Opening Balances</button></div>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+<div id="toast">✓ Saved!</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+// ═══ DATA STORE ═══
+const FUEL_MAX={MS:15000,HSD:20000};
+let D={
+  stock:[],   // {id,date,fuel,type,qty,rate,inv,value}
+  sales:[],   // {id,date,fuel,open,close,qty,rate,amount,cash,card,upi,credit,creditParties:[{name,amount}]}
+  recvs:[],   // {id,date,party,type,amount,ref,remarks}  — manual receivables
+  cashbook:[], // {id,date,book,type,narr,amount,ref,source,head,headSub,party,expCat,expType}
+  expenses:[], // {id,date,type,cat,desc,amount}
+  parties:[],  // {id,name,address,contact,gstin,notes} — Party Master
+  ob:{ms:0,hsd:0,msRate:0,hsdRate:0,cash:0,bank:0,parties:[]}
+};
+try{const s=localStorage.getItem('srisai4');if(s)D=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem('srisai4',JSON.stringify(D));}catch(e){}}
+
+// ═══ HELPERS ═══
+function fmt(n){return '₹'+(parseFloat(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fN(n){return (parseFloat(n)||0).toFixed(2);}
+function tod(){return new Date().toISOString().split('T')[0];}
+function daysDiff(d,asOn){return Math.max(0,Math.floor((new Date(asOn||tod())-new Date(d))/86400000));}
+function ageBucket(days){
+  if(days<=30)return{lbl:'0–30',cls:'a0'};if(days<=60)return{lbl:'31–60',cls:'a30'};
+  if(days<=90)return{lbl:'61–90',cls:'a60'};if(days<=180)return{lbl:'91–180',cls:'a90'};
+  return{lbl:'>180',cls:'aold'};
+}
+function toast(m){const t=document.getElementById('toast');t.textContent='✓ '+m;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
+
+// ═══ PARTY NAMES MASTER LIST ═══
+function getAllPartyNames(){
+  const set=new Set();
+  (D.ob.parties||[]).forEach(p=>set.add(p.name));
+  (D.parties||[]).forEach(p=>set.add(p.name));
+  D.recvs.forEach(r=>set.add(r.party));
+  D.sales.forEach(s=>(s.creditParties||[]).forEach(cp=>set.add(cp.name)));
+  return [...set].filter(Boolean).sort();
+}
+
+// ═══ AUTOCOMPLETE ═══
+function acShow(inputId,listId){
+  const input=document.getElementById(inputId);
+  const list=document.getElementById(listId);
+  const val=input.value.trim().toLowerCase();
+  const names=getAllPartyNames().filter(n=>n.toLowerCase().includes(val));
+  if(!names.length||!val){list.style.display='none';return;}
+  list.innerHTML=names.map(n=>`<div class="ac-item" onmousedown="acSelect('${inputId}','${listId}','${n.replace(/'/g,"\\'")}');">${n}</div>`).join('');
+  list.style.display='block';
+}
+function acSelect(inputId,listId,val){
+  document.getElementById(inputId).value=val;
+  document.getElementById(listId).style.display='none';
+}
+document.addEventListener('click',()=>document.querySelectorAll('.ac-list').forEach(l=>l.style.display='none'));
+
+// ═══ CLOCK ═══
+function tick(){
+  const n=new Date();
+  document.getElementById('sb-clock').textContent=n.toLocaleTimeString('en-IN');
+  const ds=n.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('sb-date').textContent=ds;
+  document.getElementById('top-date').textContent=n.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const dd=document.getElementById('dash-date');if(dd)dd.textContent='📅 '+n.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+}
+setInterval(tick,1000);tick();
+
+// Set default dates
+function setDates(){const t=tod();['st-date','rv-date','cb-date','ex-date','age-date','comb-date'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=t;});}
+setDates();
+
+// ═══ NAVIGATION ═══
+const PAGE_NAMES={dashboard:'Dashboard',stock:'Stock Management',sales:'Sales Management',receivables:'Receivables',cash:'Cash & Bank Book',pl:'Profit & Loss',ageing:'Ageing Report',settings:'Opening Balances',partymaster:'Party Master'};
+function showTab(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('pg-title').textContent=PAGE_NAMES[id]||id;
+  renderAll();
+}
+function navTo(id){const el=document.querySelector('.ni[onclick*="\''+id+'\'"]');showTab(id,el);}
+
+// ═══ EXP CATEGORIES ═══
+const EXP_CATS=['Salary / Wages','Staff Welfare','Electricity','Rent','Maintenance','Insurance','Licence / Fees','Printing & Stationery','Miscellaneous'];
+const INC_CATS=['Incentive from BPCL','Interest Income','Miscellaneous Income'];
+function updateExpCat(){const t=document.getElementById('ex-type').value;document.getElementById('ex-cat').innerHTML=(t==='Expense'?EXP_CATS:INC_CATS).map(c=>`<option>${c}</option>`).join('');}
+updateExpCat();
+
+// ═══ FUEL BALANCE ═══
+function getFuelBal(fuel){
+  let bal=D.ob[fuel==='MS'?'ms':'hsd']||0;
+  D.stock.filter(s=>s.fuel===fuel).forEach(s=>bal+=s.qty);
+  D.sales.filter(s=>s.fuel===fuel).forEach(s=>bal-=s.qty);
+  return Math.max(0,bal);
+}
+
+// Weighted average purchase rate per litre for a given fuel
+function getAvgPurchaseRate(fuel){
+  let totalQty=D.ob[fuel==='MS'?'ms':'hsd']||0;
+  let totalVal=(D.ob[fuel==='MS'?'ms':'hsd']||0)*(D.ob[fuel==='MS'?'msRate':'hsdRate']||0);
+  D.stock.filter(s=>s.fuel===fuel).forEach(s=>{totalQty+=s.qty;totalVal+=s.value;});
+  return totalQty>0?totalVal/totalQty:0;
+}
+
+// Total sold qty per fuel
+function getSoldQty(fuel){return D.sales.filter(s=>s.fuel===fuel).reduce((a,s)=>a+s.qty,0);}
+
+// ═══ STOCK ═══
+function addStock(){
+  const fuel=document.getElementById('st-fuel').value;
+  const qty=parseFloat(document.getElementById('st-qty').value)||0;
+  const rate=parseFloat(document.getElementById('st-rate').value)||0;
+  const date=document.getElementById('st-date').value;
+  const type=document.getElementById('st-type').value;
+  const inv=document.getElementById('st-inv').value;
+  if(!date||!qty){alert('Fill Date and Quantity');return;}
+  const cur=getFuelBal(fuel),nxt=cur+qty,max=FUEL_MAX[fuel];
+  const w=document.getElementById('st-warn');
+  if(nxt>max){w.style.display='block';w.innerHTML=`⚠️ After receipt, ${fuel} stock (${fN(nxt)} L) exceeds max capacity of <strong>${max.toLocaleString()} L</strong>. Delivery not permitted.`;return;}
+  w.style.display='none';
+  D.stock.unshift({id:Date.now(),date,fuel,type,qty,rate,inv,value:qty*rate});
+  save();renderAll();toast('Stock added!');
+  ['st-qty','st-inv'].forEach(id=>document.getElementById(id).value='');
+}
+function delStock(id){D.stock=D.stock.filter(s=>s.id!==id);save();renderAll();}
+
+function renderStock(){
+  ['MS','HSD'].forEach(f=>{
+    const bal=getFuelBal(f),max=FUEL_MAX[f],pct=Math.min(100,(bal/max)*100),isCrit=pct<15;
+  });
+  let gh='';
+  ['MS','HSD'].forEach(f=>{
+    const bal=getFuelBal(f),max=FUEL_MAX[f],pct=Math.min(100,(bal/max)*100),isCrit=pct<15;
+    const cls=isCrit?'warn':f.toLowerCase(),lbl=f==='MS'?'⛽ Petrol (MS)':'🔵 Diesel (HSD)';
+    gh+=`<div class="fi"><div class="fn">${lbl}</div>
+      <div class="fb-bg"><div class="fb ${cls}" style="width:${pct.toFixed(1)}%"></div></div>
+      <div class="fm"><span><strong>${fN(bal)} L</strong> available</span><span>Max ${max.toLocaleString()} L | ${pct.toFixed(1)}%</span></div>
+      ${isCrit?'<div style="font-size:11px;color:var(--rd);font-weight:700;margin-top:4px;">⚠️ Low stock! Order required.</div>':''}
+    </div>`;
+  });
+  document.getElementById('fuel-gauges').innerHTML=gh;
+
+  // Date filter for stock ledger
+  const stkFrom=(document.getElementById('stk-from')||{value:''}).value;
+  const stkTo=(document.getElementById('stk-to')||{value:''}).value;
+
+  const rows=[],runBal={MS:0,HSD:0};
+  ['MS','HSD'].forEach(f=>{
+    const obQ=D.ob[f==='MS'?'ms':'hsd']||0,obR=D.ob[f==='MS'?'msRate':'hsdRate']||0;
+    if(obQ>0){runBal[f]+=obQ;rows.push({isOB:true,date:'Opening',fuel:f,type:'Opening Balance',inv:'—',qty:obQ,rate:obR,value:obQ*obR,bal:runBal[f],rawDate:'0000-00-00'});}
+  });
+  [...D.stock].reverse().forEach(s=>{runBal[s.fuel]=(runBal[s.fuel]||0)+s.qty;rows.push({...s,bal:runBal[s.fuel],rawDate:s.date});});
+
+  // Apply filters (OB row always shown unless date filter active; then show B/F)
+  const filtered=rows.filter(r=>{
+    if(r.isOB) return !stkFrom; // hide OB row when filtering (show B/F instead)
+    return (!stkFrom||r.rawDate>=stkFrom)&&(!stkTo||r.rawDate<=stkTo);
+  });
+
+  // If date filter active, prepend opening balance rows (B/F) per fuel
+  const bfRows=[];
+  if(stkFrom){
+    ['MS','HSD'].forEach(f=>{
+      let bfBal=D.ob[f==='MS'?'ms':'hsd']||0;
+      [...D.stock].reverse().filter(s=>s.fuel===f&&s.date<stkFrom).forEach(s=>bfBal+=s.qty);
+      D.sales.filter(s=>s.fuel===f&&s.date<stkFrom).forEach(s=>bfBal-=s.qty);
+      bfRows.push({isOB:true,isBF:true,date:stkFrom,fuel:f,type:'Balance B/F',inv:'—',qty:0,rate:0,value:0,bal:Math.max(0,bfBal)});
+    });
+  }
+
+  const tb=document.getElementById('stock-tb');
+  const displayRows=[...bfRows,...filtered];
+  tb.innerHTML=displayRows.length?displayRows.map(r=>`<tr style="${r.isOB?'background:#fffbf0;':''}">
+    <td${r.isOB?' style="color:var(--gold);font-weight:700;"':''} >${r.date}</td><td>${r.fuel}</td>
+    <td><span class="badge ${r.isOB?'bb2':'bo3'}">${r.type}</span></td><td>${r.inv||'—'}</td>
+    <td class="nm">${r.qty>0?fN(r.qty):'—'}</td><td class="nm">${r.rate>0?fmt(r.rate):'—'}</td>
+    <td class="nm cr">${r.value>0?fmt(r.value):'—'}</td><td class="nm"><strong>${fN(r.bal)}</strong></td>
+    <td>${(r.isOB||r.isBF)?'':'<button class="btn bd" onclick="delStock('+r.id+')">✕</button>'}</td>
+  </tr>`).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px">No entries in selected range</td></tr>';
+
+  renderDayWiseStock();
+}
+
+function renderDayWiseStock(){
+  const from=(document.getElementById('dws-from')||{value:''}).value;
+  const to=(document.getElementById('dws-to')||{value:''}).value;
+
+  // Collect all unique dates from stock receipts and sales
+  const allDates=new Set();
+  D.stock.forEach(s=>allDates.add(s.date));
+  D.sales.forEach(s=>allDates.add(s.date));
+  let dates=[...allDates].sort();
+  if(from) dates=dates.filter(d=>d>=from);
+  if(to) dates=dates.filter(d=>d<=to);
+
+  const tb=document.getElementById('dws-tb');
+  if(!dates.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No data in selected range</td></tr>';return;}
+
+  const rows=[];
+  dates.forEach(date=>{
+    ['MS','HSD'].forEach(fuel=>{
+      // Opening stock for this date = cumulative receipts - cumulative sales before this date
+      let obStock=D.ob[fuel==='MS'?'ms':'hsd']||0;
+      D.stock.filter(s=>s.fuel===fuel&&s.date<date).forEach(s=>obStock+=s.qty);
+      D.sales.filter(s=>s.fuel===fuel&&s.date<date).forEach(s=>obStock-=s.qty);
+      obStock=Math.max(0,obStock);
+
+      const receipts=D.stock.filter(s=>s.fuel===fuel&&s.date===date).reduce((a,s)=>a+s.qty,0);
+      const sales=D.sales.filter(s=>s.fuel===fuel&&s.date===date).reduce((a,s)=>a+s.qty,0);
+      const closing=Math.max(0,obStock+receipts-sales);
+      const avgRate=getAvgPurchaseRate(fuel);
+
+      if(obStock>0||receipts>0||sales>0){
+        rows.push({date,fuel,obStock,receipts,sales,closing,closingVal:closing*avgRate});
+      }
+    });
+  });
+
+  tb.innerHTML=rows.length?rows.map(r=>`<tr>
+    <td>${r.date}</td>
+    <td><span class="badge ${r.fuel==='MS'?'bo3':'bb2'}">${r.fuel}</span></td>
+    <td class="nm">${fN(r.obStock)}</td>
+    <td class="nm cr">${r.receipts>0?fN(r.receipts):'—'}</td>
+    <td class="nm dr">${r.sales>0?fN(r.sales):'—'}</td>
+    <td class="nm" style="font-weight:700;">${fN(r.closing)}</td>
+    <td class="nm cr">${fmt(r.closingVal)}</td>
+  </tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No activity in range</td></tr>';
+}
+
+// ═══ SALE MODE (combined only) ═══
+let _saleMode='combined';
+let _msAmt=0,_hsdAmt=0;
+
+function calcCombined(){
+  const msO=parseFloat(document.getElementById('ms-open').value)||0;
+  const msC=parseFloat(document.getElementById('ms-close').value)||0;
+  const msR=parseFloat(document.getElementById('ms-rate').value)||0;
+  let msQ=parseFloat(document.getElementById('ms-qty').value)||0;
+  if(msO>0&&msC>0&&!document.getElementById('ms-qty').dataset.manual){msQ=Math.max(0,msC-msO);document.getElementById('ms-qty').value=msQ.toFixed(2);}
+  _msAmt=msQ*msR;
+
+  const hsdO=parseFloat(document.getElementById('hsd-open').value)||0;
+  const hsdC=parseFloat(document.getElementById('hsd-close').value)||0;
+  const hsdR=parseFloat(document.getElementById('hsd-rate').value)||0;
+  let hsdQ=parseFloat(document.getElementById('hsd-qty').value)||0;
+  if(hsdO>0&&hsdC>0&&!document.getElementById('hsd-qty').dataset.manual){hsdQ=Math.max(0,hsdC-hsdO);document.getElementById('hsd-qty').value=hsdQ.toFixed(2);}
+  _hsdAmt=hsdQ*hsdR;
+
+  _saleAmt=_msAmt+_hsdAmt;
+  document.getElementById('ms-amt-lbl').textContent=fmt(_msAmt);
+  document.getElementById('hsd-amt-lbl').textContent=fmt(_hsdAmt);
+  document.getElementById('cc-ms').textContent=fmt(_msAmt);
+  document.getElementById('cc-hsd').textContent=fmt(_hsdAmt);
+  document.getElementById('cc-total').textContent=fmt(_saleAmt);
+  // Show max credit = HSD amount only
+  const creditMaxEl=document.getElementById('sa-credit-max');
+  if(creditMaxEl) creditMaxEl.textContent=fmt(_hsdAmt);
+  if(_saleAmt>0){
+    document.getElementById('pay-split-box').style.display='block';
+    document.getElementById('ps-total-lbl').textContent=fmt(_saleAmt);
+    calcSplit();
+  } else {
+    document.getElementById('pay-split-box').style.display='none';
+  }
+}
+
+// ═══ SALES — CALC & SPLIT ═══
+let _saleAmt=0;
+
+function calcSplit(){
+  const cash=parseFloat(document.getElementById('sa-cash').value)||0;
+  const card=parseFloat(document.getElementById('sa-card').value)||0;
+  const upi=parseFloat(document.getElementById('sa-upi').value)||0;
+  const credit=parseFloat(document.getElementById('sa-credit').value)||0;
+  const total=cash+card+upi+credit;
+  const rem=_saleAmt-total;
+  const pb=document.getElementById('pay-balance');
+  // Credit cannot exceed HSD amount
+  if(credit>_hsdAmt+0.01){
+    pb.className='pay-balance err';
+    pb.textContent=`⚠️ Credit (${fmt(credit)}) cannot exceed HSD amount (${fmt(_hsdAmt)}). Credit sales allowed only for HSD.`;
+  } else if(Math.abs(rem)<0.01){pb.className='pay-balance ok';pb.textContent='✅ Fully allocated — all amounts balanced!';}
+  else if(rem>0){pb.className='pay-balance err';pb.textContent=`Remaining to allocate: ${fmt(rem)}`;}
+  else{pb.className='pay-balance err';pb.textContent=`Over-allocated by: ${fmt(Math.abs(rem))}`;}
+  // Show/hide credit party section
+  const cps=document.getElementById('credit-party-section');
+  if(credit>0){cps.style.display='block';renderCreditRows();updateCreditBalance();}
+  else{cps.style.display='none';}
+}
+
+// Credit party rows
+let _creditRows=[{name:'',amount:''}];
+function addCreditRow(){_creditRows.push({name:'',amount:''});renderCreditRows();}
+function removeCreditRow(i){_creditRows.splice(i,1);if(!_creditRows.length)_creditRows=[{name:'',amount:''}];renderCreditRows();updateCreditBalance();}
+
+function renderCreditRows(){
+  const cont=document.getElementById('credit-rows');
+  cont.innerHTML=_creditRows.map((r,i)=>`
+    <div class="credit-row">
+      <div class="ac-wrap" style="flex:2;">
+        <input type="text" value="${r.name}" placeholder="Party name" id="cp-name-${i}"
+          oninput="_creditRows[${i}].name=this.value;acShow('cp-name-${i}','cp-ac-${i}')"
+          onblur="updateCreditBalance()" autocomplete="off">
+        <div class="ac-list" id="cp-ac-${i}" style="display:none;"></div>
+      </div>
+      <input type="number" value="${r.amount}" placeholder="Amount ₹" id="cp-amt-${i}" step="0.01"
+        style="flex:1;background:#f9fafb;border:1.5px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;"
+        oninput="_creditRows[${i}].amount=this.value;updateCreditBalance()">
+      <button class="btn bd" onclick="removeCreditRow(${i})">✕</button>
+    </div>`).join('');
+}
+
+function updateCreditBalance(){
+  _creditRows.forEach((r,i)=>{r.name=(document.getElementById('cp-name-'+i)||{value:r.name}).value;r.amount=(document.getElementById('cp-amt-'+i)||{value:r.amount}).value;});
+  const creditAmt=parseFloat(document.getElementById('sa-credit').value)||0;
+  const partyTotal=_creditRows.reduce((a,r)=>a+(parseFloat(r.amount)||0),0);
+  const rem=creditAmt-partyTotal;
+  const el=document.getElementById('credit-party-balance');
+  if(Math.abs(rem)<0.01){el.style.color='var(--gn)';el.textContent='✅ Party totals match credit amount';}
+  else{el.style.color='var(--rd)';el.textContent=`Party totals (${fmt(partyTotal)}) differ from credit (${fmt(creditAmt)}) by ${fmt(Math.abs(rem))}`;}
+}
+
+function addSale(){addSaleCombined();}
+
+function addSaleCombined(){
+  const date=document.getElementById('comb-date').value||tod();
+  const msO=parseFloat(document.getElementById('ms-open').value)||0;
+  const msC=parseFloat(document.getElementById('ms-close').value)||0;
+  const msQ=parseFloat(document.getElementById('ms-qty').value)||0;
+  const msR=parseFloat(document.getElementById('ms-rate').value)||0;
+  const hsdO=parseFloat(document.getElementById('hsd-open').value)||0;
+  const hsdC=parseFloat(document.getElementById('hsd-close').value)||0;
+  const hsdQ=parseFloat(document.getElementById('hsd-qty').value)||0;
+  const hsdR=parseFloat(document.getElementById('hsd-rate').value)||0;
+  const cash=parseFloat(document.getElementById('sa-cash').value)||0;
+  const card=parseFloat(document.getElementById('sa-card').value)||0;
+  const upi=parseFloat(document.getElementById('sa-upi').value)||0;
+  const credit=parseFloat(document.getElementById('sa-credit').value)||0;
+  if(!date){alert('Fill Date');return;}
+  if(!msQ&&!hsdQ){alert('Enter at least one fuel quantity');return;}
+  const totalAmt=(msQ*msR)+(hsdQ*hsdR);
+  const hsdAmt=hsdQ*hsdR;
+  if(credit>hsdAmt+0.01){alert(`Credit sale (${fmt(credit)}) cannot exceed HSD amount (${fmt(hsdAmt)}). Credit is allowed only for HSD.`);return;}
+  const splitTotal=cash+card+upi+credit;
+  if(Math.abs(splitTotal-totalAmt)>0.01){alert(`Payment split (${fmt(splitTotal)}) does not match total (${fmt(totalAmt)})`);return;}
+  let creditParties=[];
+  if(credit>0){
+    _creditRows.forEach((r,i)=>{r.name=(document.getElementById('cp-name-'+i)||{value:r.name}).value;r.amount=(document.getElementById('cp-amt-'+i)||{value:r.amount}).value;});
+    creditParties=_creditRows.filter(r=>r.name&&parseFloat(r.amount)>0).map(r=>({name:r.name.trim(),amount:parseFloat(r.amount)}));
+    const pt=creditParties.reduce((a,r)=>a+r.amount,0);
+    if(Math.abs(pt-credit)>0.01){alert(`Credit party totals don't match credit amount`);return;}
+  }
+  // Split payment: credit goes entirely to HSD, rest split proportionally
+  const msAmt=msQ*msR;
+  const ratio=totalAmt>0?msAmt/totalAmt:0.5;
+  const id=Date.now();
+  // For non-credit amounts, split proportionally; credit stays with HSD
+  const nonCreditTotal=cash+card+upi;
+  if(msQ>0){
+    const msCash=round2(cash*ratio),msCard=round2(card*ratio),msUpi=round2(upi*ratio);
+    D.sales.unshift({id,date,fuel:'MS',open:msO,close:msC,qty:msQ,rate:msR,amount:msAmt,cash:msCash,card:msCard,upi:msUpi,credit:0,creditParties:[],combinedRef:id});
+    postSaleToCashbook(id,date,'MS',msCash,msCard,msUpi,[]);
+  }
+  if(hsdQ>0){
+    const hsdId=id+100;
+    const hsdCash=round2(cash*(1-ratio)),hsdCard=round2(card*(1-ratio)),hsdUpi=round2(upi*(1-ratio));
+    D.sales.unshift({id:hsdId,date,fuel:'HSD',open:hsdO,close:hsdC,qty:hsdQ,rate:hsdR,amount:hsdAmt,cash:hsdCash,card:hsdCard,upi:hsdUpi,credit,creditParties,combinedRef:id});
+    postSaleToCashbook(hsdId,date,'HSD',hsdCash,hsdCard,hsdUpi,creditParties);
+  }
+  creditParties.forEach((cp,i)=>{
+    D.recvs.unshift({id:id+200+i,date,party:cp.name,type:'Invoice',amount:cp.amount,ref:`SALE-${id}`,remarks:`HSD credit sale`});
+  });
+  save();renderAll();toast('Combined sale saved!');
+  ['ms-open','ms-close','ms-qty','ms-rate','hsd-open','hsd-close','hsd-qty','hsd-rate','sa-cash','sa-card','sa-upi','sa-credit'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pay-split-box').style.display='none';
+  _creditRows=[{name:'',amount:''}];_saleAmt=0;_msAmt=0;_hsdAmt=0;
+}
+
+function round2(n){return Math.round((n||0)*100)/100;}
+
+function postSaleToCashbook(id,date,fuel,cash,card,upi,creditParties){
+  if(cash>0)D.cashbook.unshift({id:id+1,date,book:'Cash',type:'Receipt',narr:`${fuel} Sales - Cash`,amount:cash,ref:`SALE-${id}`,source:'sale-cash',head:'General'});
+  if(card>0)D.cashbook.unshift({id:id+2,date,book:'Bank',type:'Receipt',narr:`${fuel} Sales - Card`,amount:card,ref:`SALE-${id}`,source:'sale-card',head:'General'});
+  if(upi>0)D.cashbook.unshift({id:id+3,date,book:'Bank',type:'Receipt',narr:`${fuel} Sales - UPI`,amount:upi,ref:`SALE-${id}`,source:'sale-upi',head:'General'});
+}
+
+function delSale(id){
+  // Also remove auto-posted cashbook entries with matching ref
+  D.cashbook=D.cashbook.filter(c=>c.ref!==`SALE-${id}`||c.source==='manual');
+  // Remove auto-posted receivables
+  D.recvs=D.recvs.filter(r=>r.ref!==`SALE-${id}`);
+  D.sales=D.sales.filter(s=>s.id!==id);
+  save();renderAll();toast('Sale deleted.');
+}
+
+function renderSales(){
+  const t=tod();
+  const tds=D.sales.filter(s=>s.date===t);
+  document.getElementById('s-today').textContent=fmt(tds.reduce((a,s)=>a+s.amount,0));
+  document.getElementById('s-cash').textContent=fmt(tds.reduce((a,s)=>a+(s.cash||0),0));
+  document.getElementById('s-card').textContent=fmt(tds.reduce((a,s)=>a+(s.card||0),0));
+  document.getElementById('s-upi').textContent=fmt(tds.reduce((a,s)=>a+(s.upi||0),0));
+  document.getElementById('s-credit').textContent=fmt(tds.reduce((a,s)=>a+(s.credit||0),0));
+
+  const salFrom=(document.getElementById('sal-from')||{value:''}).value;
+  const salTo=(document.getElementById('sal-to')||{value:''}).value;
+  let sales=D.sales;
+  if(salFrom||salTo) sales=D.sales.filter(s=>(!salFrom||s.date>=salFrom)&&(!salTo||s.date<=salTo));
+
+  const tb=document.getElementById('sales-tb');
+  const fi=document.getElementById('sal-filter-info');
+  const ft=document.getElementById('sal-filter-totals');
+  if(salFrom||salTo){
+    fi.style.display='block';
+    fi.innerHTML=`📅 Showing ${sales.length} entr${sales.length===1?'y':'ies'}${salFrom?' from <strong>'+salFrom+'</strong>':''}${salTo?' to <strong>'+salTo+'</strong>':''}`;
+    const pAmt=sales.reduce((a,s)=>a+s.amount,0);
+    const pCash=sales.reduce((a,s)=>a+(s.cash||0),0);
+    const pCard=sales.reduce((a,s)=>a+(s.card||0),0);
+    const pUpi=sales.reduce((a,s)=>a+(s.upi||0),0);
+    const pCredit=sales.reduce((a,s)=>a+(s.credit||0),0);
+    ft.style.display='flex';
+    ft.innerHTML=`<span>Total: <strong class="cr">${fmt(pAmt)}</strong></span><span>Cash: <strong class="gn">${fmt(pCash)}</strong></span><span>Card: <strong class="bl">${fmt(pCard)}</strong></span><span>UPI: <strong style="color:#7b1fa2">${fmt(pUpi)}</strong></span><span>Credit: <strong class="dr">${fmt(pCredit)}</strong></span>`;
+  } else {
+    fi.style.display='none';
+    ft.style.display='none';
+  }
+  if(!sales.length){tb.innerHTML=`<tr><td colspan="13" style="text-align:center;color:var(--muted);padding:16px">${salFrom||salTo?'No sales in selected range':'No sales yet'}</td></tr>`;return;}
+  tb.innerHTML=sales.map(s=>{
+    const parties=(s.creditParties||[]).map(cp=>`<span class="badge bo3">${cp.name}: ${fmt(cp.amount)}</span>`).join(' ');
+    return `<tr>
+      <td>${s.date}</td><td>${s.fuel}</td>
+      <td class="nm">${fN(s.open)}</td><td class="nm">${fN(s.close)}</td>
+      <td class="nm"><strong>${fN(s.qty)}</strong></td>
+      <td class="nm">${fmt(s.rate)}</td>
+      <td class="nm cr"><strong>${fmt(s.amount)}</strong></td>
+      <td class="nm gn">${s.cash>0?fmt(s.cash):'—'}</td>
+      <td class="nm bl">${s.card>0?fmt(s.card):'—'}</td>
+      <td class="nm" style="color:#7b1fa2">${s.upi>0?fmt(s.upi):'—'}</td>
+      <td class="nm rd">${s.credit>0?fmt(s.credit):'—'}</td>
+      <td>${parties||'—'}</td>
+      <td><button class="btn bd" onclick="delSale(${s.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══ RECEIVABLES ═══
+function addRecv(){
+  const e={id:Date.now(),date:document.getElementById('rv-date').value,party:document.getElementById('rv-party').value.trim(),type:document.getElementById('rv-type').value,amount:parseFloat(document.getElementById('rv-amt').value)||0,ref:document.getElementById('rv-ref').value,remarks:document.getElementById('rv-rmk').value};
+  if(!e.date||!e.party||!e.amount){alert('Fill Date, Party and Amount');return;}
+  D.recvs.unshift(e);save();renderAll();toast('Receivable saved!');
+  // If a party ledger is open for this party, refresh it
+  if(_ledgerParty===e.party) renderPartyLedger(e.party);
+  ['rv-party','rv-amt','rv-ref','rv-rmk'].forEach(id=>document.getElementById(id).value='');
+}
+function delRecv(id){D.recvs=D.recvs.filter(r=>r.id!==id);save();renderAll();}
+
+function getPartyBal(){
+  const p={};
+  (D.ob.parties||[]).forEach(x=>{if(!p[x.name])p[x.name]={ob:0,billed:0,coll:0};p[x.name].ob+=x.amount;});
+  D.recvs.forEach(r=>{if(!p[r.party])p[r.party]={ob:0,billed:0,coll:0};if(r.type==='Invoice')p[r.party].billed+=r.amount;else p[r.party].coll+=r.amount;});
+  return p;
+}
+
+function renderReceivables(){
+  const p=getPartyBal();
+  let billed=0,coll=0,ob=0;
+  Object.values(p).forEach(v=>{ob+=v.ob;billed+=v.billed;coll+=v.coll;});
+  document.getElementById('r-billed').textContent=fN(ob+billed);
+  document.getElementById('r-coll').textContent=fN(coll);
+  document.getElementById('r-out').textContent=fN(ob+billed-coll);
+
+  // Render quick-select party pills in search bar
+  renderPartyPills(p);
+
+  // Party summary table with inline filter
+  const tblFilter=(document.getElementById('party-tbl-search')||{value:''}).value.trim().toLowerCase();
+  const ps=document.getElementById('party-sum');
+  const pl=Object.entries(p).filter(([n])=>!tblFilter||n.toLowerCase().includes(tblFilter));
+  ps.innerHTML=pl.length?pl.map(([n,v])=>{
+    const out=v.ob+v.billed-v.coll;
+    const st=out<=0?'<span class="badge bg2">CLEAR</span>':out>50000?'<span class="badge br2">HIGH</span>':'<span class="badge bgd2">PENDING</span>';
+    const esc=n.replace(/'/g,"\\'");
+    return `<tr>
+      <td><strong style="cursor:pointer;color:var(--primary);text-decoration:underline dotted;" onclick="openPartyLedger('${esc}')">${n}</strong></td>
+      <td class="nm">${fmt(v.ob)}</td>
+      <td class="nm">${fmt(v.billed)}</td>
+      <td class="nm cr">${fmt(v.coll)}</td>
+      <td class="nm ${out>0?'dr':''}">${fmt(out)}</td>
+      <td>${st}</td>
+      <td><button class="btn bs" onclick="openPartyLedger('${esc}')" style="font-size:11px;padding:3px 10px;">📒 Ledger</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:14px">No matching parties</td></tr>';
+
+  // All receivables ledger with search + date filter
+  const searchVal=(document.getElementById('recv-search')||{value:''}).value.trim().toLowerCase();
+  const recvFrom=(document.getElementById('recv-from')||{value:''}).value;
+  const recvTo=(document.getElementById('recv-to')||{value:''}).value;
+  let allRecvs=D.recvs;
+  if(searchVal) allRecvs=allRecvs.filter(r=>r.party.toLowerCase().includes(searchVal));
+  if(recvFrom) allRecvs=allRecvs.filter(r=>r.date>=recvFrom);
+  if(recvTo) allRecvs=allRecvs.filter(r=>r.date<=recvTo);
+  const tb=document.getElementById('recv-tb');
+  const rfi=document.getElementById('recv-filter-info');
+  if(recvFrom||recvTo){
+    rfi.style.display='block';
+    const drTotal=allRecvs.filter(r=>r.type==='Invoice').reduce((a,r)=>a+r.amount,0);
+    const crTotal=allRecvs.filter(r=>r.type==='Collection').reduce((a,r)=>a+r.amount,0);
+    rfi.innerHTML=`📅 Showing ${allRecvs.length} entr${allRecvs.length===1?'y':'ies'}${recvFrom?' from <strong>'+recvFrom+'</strong>':''}${recvTo?' to <strong>'+recvTo+'</strong>':''} &nbsp;·&nbsp; Dr: <strong class="dr">${fmt(drTotal)}</strong> &nbsp;Cr: <strong class="cr">${fmt(crTotal)}</strong>`;
+  } else { rfi.style.display='none'; }
+  if(!allRecvs.length){
+    tb.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">${(searchVal||recvFrom||recvTo)?'No entries match the filter':'No entries yet'}</td></tr>`;
+    return;
+  }
+  tb.innerHTML=allRecvs.map(r=>`<tr>
+    <td>${r.date}</td>
+    <td><button class="btn" onclick="openPartyLedger('${r.party.replace(/'/g,"\\'")}') " style="background:none;border:none;color:var(--primary);font-weight:700;font-size:13px;cursor:pointer;padding:0;text-decoration:underline dotted;">${r.party}</button></td>
+    <td><span class="badge ${r.type==='Invoice'?'br2':'bg2'}">${r.type}</span></td>
+    <td>${r.ref||'—'}</td>
+    <td class="nm dr">${r.type==='Invoice'?fmt(r.amount):'—'}</td>
+    <td class="nm cr">${r.type==='Collection'?fmt(r.amount):'—'}</td>
+    <td>${r.remarks||'—'}</td>
+    <td>${r.source?'':'<button class="btn bd" onclick="delRecv('+r.id+')">✕</button>'}</td>
+  </tr>`).join('');
+}
+
+// ═══ PARTY PILLS ═══
+function renderPartyPills(partyData){
+  const container=document.getElementById('party-pills-row');
+  if(!container) return;
+  const p=partyData||getPartyBal();
+  const pending=Object.entries(p).filter(([,v])=>v.ob+v.billed-v.coll>0.01);
+  if(!pending.length){container.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:11px;">No outstanding parties</span>';return;}
+  container.innerHTML=pending.slice(0,8).map(([n,v])=>{
+    const out=v.ob+v.billed-v.coll;
+    const esc=n.replace(/'/g,"\\'");
+    const isActive=_ledgerParty===n;
+    return `<div class="party-pill${isActive?' active':''}" onclick="openPartyLedger('${esc}')">${n}<span class="pill-outstanding">${fN(out)}</span></div>`;
+  }).join('');
+  if(pending.length>8) container.innerHTML+=`<span style="color:rgba(255,255,255,0.4);font-size:11px;align-self:center;">+${pending.length-8} more</span>`;
+}
+
+// ═══ GLOBAL PARTY SEARCH ═══
+function onGlobalPartySearch(){
+  const val=document.getElementById('global-party-search').value.trim().toLowerCase();
+  const dd=document.getElementById('gps-dropdown');
+  if(!val){dd.style.display='none';return;}
+  const matches=getAllPartyNames().filter(n=>n.toLowerCase().includes(val));
+  if(!matches.length){dd.style.display='none';return;}
+  dd.innerHTML=matches.map(n=>`<div class="ac-item" onmousedown="selectGlobalParty('${n.replace(/'/g,"\\'")}')"><span style="font-weight:700;">${n}</span></div>`).join('');
+  dd.style.display='block';
+}
+function selectGlobalParty(name){
+  document.getElementById('global-party-search').value=name;
+  document.getElementById('gps-dropdown').style.display='none';
+  openPartyLedger(name);
+}
+function clearPartySearch(){
+  document.getElementById('global-party-search').value='';
+  document.getElementById('gps-dropdown').style.display='none';
+  closePartyLedger();
+}
+// Sync the entry form's party field to also open the ledger
+function syncPartySearchFromEntry(){
+  const val=document.getElementById('rv-party').value.trim();
+  if(val && getAllPartyNames().includes(val)){
+    openPartyLedger(val);
+  }
+}
+
+// ═══ PARTY LEDGER ═══
+let _ledgerParty=null;
+
+function openPartyLedger(partyName){
+  _ledgerParty=partyName;
+  const card=document.getElementById('party-ledger-card');
+  card.style.display='block';
+  document.getElementById('pl-party-name').textContent=partyName;
+  document.getElementById('global-party-search').value=partyName;
+  renderPartyLedger(partyName);
+  renderPartyPills();
+  setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function closePartyLedger(){
+  document.getElementById('party-ledger-card').style.display='none';
+  _ledgerParty=null;
+  document.getElementById('global-party-search').value='';
+  renderPartyPills();
+}
+
+function clearLedgerDates(){
+  document.getElementById('ledger-from').value='';
+  document.getElementById('ledger-to').value='';
+  if(_ledgerParty) renderPartyLedger(_ledgerParty);
+}
+
+function renderPartyLedger(partyName){
+  if(!partyName) return;
+  // Get opening balance for this party
+  const obEntry=(D.ob.parties||[]).find(p=>p.name===partyName);
+  const ob=obEntry?obEntry.amount:0;
+
+  // Date range filter
+  const fromDate=document.getElementById('ledger-from').value;
+  const toDate=document.getElementById('ledger-to').value;
+
+  // Get ALL transactions for this party (sorted ascending)
+  const allTxns=D.recvs.filter(r=>r.party===partyName).slice().sort((a,b)=>a.date.localeCompare(b.date));
+
+  // Compute running balance up to fromDate (to carry forward)
+  let carryFwd=ob;
+  const filteredTxns=[];
+  allTxns.forEach(r=>{
+    if(fromDate && r.date < fromDate){
+      if(r.type==='Invoice') carryFwd+=r.amount; else carryFwd-=r.amount;
+    } else if((!fromDate || r.date>=fromDate) && (!toDate || r.date<=toDate)){
+      filteredTxns.push(r);
+    }
+  });
+
+  // Summary (always from all txns, not filtered)
+  const totalDr=allTxns.filter(r=>r.type==='Invoice').reduce((a,r)=>a+r.amount,0);
+  const totalCr=allTxns.filter(r=>r.type==='Collection').reduce((a,r)=>a+r.amount,0);
+  const netBal=ob+totalDr-totalCr;
+
+  document.getElementById('pl-ob').textContent=fmt(ob);
+  document.getElementById('pl-dr').textContent=fmt(totalDr);
+  document.getElementById('pl-cr').textContent=fmt(totalCr);
+  const balEl=document.getElementById('pl-bal');
+  balEl.textContent=fmt(netBal);
+  balEl.style.color=netBal>0?'var(--rd)':netBal<0?'var(--gn)':'var(--muted)';
+
+  // Status badge
+  const badge=document.getElementById('pl-party-status-badge');
+  if(netBal<=0) badge.innerHTML='<span class="badge bg2" style="font-size:13px;">✅ CLEAR</span>';
+  else if(netBal>50000) badge.innerHTML='<span class="badge br2" style="font-size:13px;">⚠️ HIGH</span>';
+  else badge.innerHTML='<span class="badge bgd2" style="font-size:13px;">PENDING</span>';
+
+  // Filter info
+  const fi=document.getElementById('ledger-filter-info');
+  if(fromDate||toDate) fi.textContent=`Showing ${filteredTxns.length} txn(s)${fromDate?' from '+fromDate:''}${toDate?' to '+toDate:''}`;
+  else fi.textContent='';
+
+  // Build table rows
+  const rows=[];
+  let runBal=carryFwd;
+
+  // Opening / carry-forward row
+  const obLabel=(fromDate&&fromDate>'2000-01-01')?'Balance B/F':'Opening Balance';
+  if(ob>0 || fromDate){
+    rows.push(`<tr style="background:#fffbf0;">
+      <td style="color:var(--gold);font-weight:700;">${fromDate||'Opening'}</td>
+      <td><span class="badge bgd2">B/F</span></td>
+      <td style="color:var(--bl);">—</td>
+      <td style="color:var(--muted);font-size:12px;">${obLabel}</td>
+      <td class="right nm">—</td>
+      <td class="right nm">—</td>
+      <td class="right nm" style="color:var(--gold);"><strong>${fmt(carryFwd)}</strong></td>
+    </tr>`);
+  }
+
+  // Group transactions by date
+  const byDate={};
+  filteredTxns.forEach(r=>{if(!byDate[r.date])byDate[r.date]=[];byDate[r.date].push(r);});
+  const sortedDates=Object.keys(byDate).sort();
+
+  sortedDates.forEach(date=>{
+    const dayTxns=byDate[date];
+    // Date group header row
+    const dayDr=dayTxns.filter(r=>r.type==='Invoice').reduce((a,r)=>a+r.amount,0);
+    const dayCr=dayTxns.filter(r=>r.type==='Collection').reduce((a,r)=>a+r.amount,0);
+    rows.push(`<tr class="date-group-row">
+      <td colspan="4">📅 ${date} &nbsp;·&nbsp; ${dayTxns.length} transaction${dayTxns.length>1?'s':''}</td>
+      <td class="right" style="color:var(--rd);font-size:11px;">${dayDr>0?fmt(dayDr):''}</td>
+      <td class="right" style="color:var(--gn);font-size:11px;">${dayCr>0?fmt(dayCr):''}</td>
+      <td></td>
+    </tr>`);
+
+    dayTxns.forEach(r=>{
+      const isDr=r.type==='Invoice';
+      if(isDr) runBal+=r.amount; else runBal-=r.amount;
+      const balColor=runBal>0?'var(--rd)':runBal<0?'var(--gn)':'var(--muted)';
+      rows.push(`<tr>
+        <td style="color:var(--muted);font-size:11px;padding-left:20px;">↳</td>
+        <td><span class="badge ${isDr?'br2':'bg2'}">${r.type}</span></td>
+        <td style="color:var(--bl);font-size:12px;">${r.ref||'—'}</td>
+        <td style="color:var(--text2);font-size:12px;">${r.remarks||'—'}</td>
+        <td class="right nm dr">${isDr?fmt(r.amount):'—'}</td>
+        <td class="right nm cr">${!isDr?fmt(r.amount):'—'}</td>
+        <td class="right nm"><strong style="color:${balColor};">${fmt(runBal)}</strong></td>
+      </tr>`);
+    });
+  });
+
+  if(!filteredTxns.length && !ob && !fromDate){
+    rows.push(`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">No transactions found for ${partyName}</td></tr>`);
+  }
+
+  const ledgerTb=document.getElementById('party-ledger-tb');
+  ledgerTb.innerHTML=rows.join('');
+
+  // Footer closing balance (based on filtered view)
+  const closingBal=runBal;
+  const cbEl=document.getElementById('pl-closing-bal');
+  cbEl.textContent=fmt(closingBal);
+  cbEl.style.color=closingBal>0?'var(--rd)':closingBal<0?'var(--gn)':'var(--muted)';
+  document.getElementById('ledger-txn-count').textContent=`${filteredTxns.length} transaction${filteredTxns.length!==1?'s':''}${fromDate||toDate?' (filtered)':''}`;
+  document.getElementById('pl-closing-bal').style.color=closingBal>0?'var(--rd)':closingBal<0?'var(--gn)':'var(--muted)';
+}
+
+function printPartyLedger(){
+  window.print();
+}
+
+// ═══ CASH & BANK HEAD LOGIC ═══
+function onCBHeadChange(){
+  const head=document.getElementById('cb-head').value;
+  const type=document.getElementById('cb-type').value;
+  document.getElementById('cb-party-wrap').style.display=head==='Party'?'':'none';
+  document.getElementById('cb-expcat-wrap').style.display=head==='Expense'?'':'none';
+  document.getElementById('cb-inccat-wrap').style.display=head==='Income'?'':'none';
+  // Update hint
+  const hints={
+    General:'ℹ️ General entry — recorded only in Cash/Bank book.',
+    Party:`ℹ️ Party ${type==='Receipt'?'receipt (reduces outstanding)':'payment'} — auto-posts to Receivables as Collection/Payment.`,
+    Expense:'ℹ️ Expense entry — auto-posts to Profit & Loss as expense.',
+    Income:'ℹ️ Income entry — auto-posts to Profit & Loss as Other Income.'
+  };
+  document.getElementById('cb-head-info').textContent=hints[head]||'';
+}
+function onCBTypeChange(){onCBHeadChange();}
+
+function addCashEntry(){
+  const date=document.getElementById('cb-date').value;
+  const book=document.getElementById('cb-book').value;
+  const type=document.getElementById('cb-type').value;
+  const head=document.getElementById('cb-head').value;
+  const narr=document.getElementById('cb-narr').value.trim();
+  const amount=parseFloat(document.getElementById('cb-amt').value)||0;
+  const ref=document.getElementById('cb-ref').value;
+  if(!date||!amount){alert('Fill Date and Amount');return;}
+  if(head==='General'&&!narr){alert('Fill Narration');return;}
+
+  const id=Date.now();
+  let party='',expCat='',expType='';
+
+  if(head==='Party'){
+    party=document.getElementById('cb-party').value.trim();
+    if(!party){alert('Select a Party');return;}
+    // Auto-post to receivables as Collection (receipt) or Payment (payment out)
+    const recvType=type==='Receipt'?'Collection':'Payment';
+    D.recvs.unshift({id:id+1,date,party,type:recvType,amount,ref,remarks:narr||(type==='Receipt'?'Cash/Bank Receipt':'Cash/Bank Payment'),source:'cashbook'});
+  } else if(head==='Expense'){
+    expCat=document.getElementById('cb-expcat').value;
+    expType='Expense';
+    const desc=narr||expCat;
+    D.expenses.unshift({id:id+2,date,type:'Expense',cat:expCat,desc,amount,source:'cashbook'});
+  } else if(head==='Income'){
+    expCat=document.getElementById('cb-inccat').value;
+    expType='Income';
+    const desc=narr||expCat;
+    D.expenses.unshift({id:id+3,date,type:'Income',cat:expCat,desc,amount,source:'cashbook'});
+  }
+
+  const finalNarr=narr||(head==='Party'?party:head==='Expense'?expCat:head==='Income'?expCat:'Entry');
+  D.cashbook.unshift({id,date,book,type,narr:finalNarr,amount,ref,source:'manual',head,party,expCat,expType});
+  save();renderAll();toast('Entry saved!');
+  ['cb-narr','cb-amt','cb-ref','cb-party'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+}
+
+function delCBManual(id){
+  const entry=D.cashbook.find(c=>c.id===id);
+  if(entry&&entry.source!=='manual'){alert('Auto-posted entries can only be removed by deleting the sale.');return;}
+  // Also remove linked receivable or expense if any
+  if(entry&&entry.head==='Party')D.recvs=D.recvs.filter(r=>r.id!==id+1);
+  if(entry&&entry.head==='Expense')D.expenses=D.expenses.filter(e=>e.id!==id+2);
+  if(entry&&entry.head==='Income')D.expenses=D.expenses.filter(e=>e.id!==id+3);
+  D.cashbook=D.cashbook.filter(c=>c.id!==id);save();renderAll();
+}
+
+function renderCashBook(){
+  const obC=D.ob.cash||0,obB=D.ob.bank||0;
+
+  // Read date filters
+  const cashFrom=(document.getElementById('cash-from')||{value:''}).value;
+  const cashTo=(document.getElementById('cash-to')||{value:''}).value;
+  const bankFrom=(document.getElementById('bank-from')||{value:''}).value;
+  const bankTo=(document.getElementById('bank-to')||{value:''}).value;
+
+  // Always compute FULL balances for summary cards (unfiltered)
+  let cCr=obC,cDr=0,bCr=obB,bDr=0;
+  D.cashbook.forEach(c=>{if(c.book==='Cash'){if(c.type==='Receipt')cCr+=c.amount;else cDr+=c.amount;}else{if(c.type==='Receipt')bCr+=c.amount;else bDr+=c.amount;}});
+  document.getElementById('cash-cr').textContent=fN(cCr);
+  document.getElementById('cash-dr').textContent=fN(cDr);
+  document.getElementById('cash-bal').textContent=fN(cCr-cDr);
+  document.getElementById('bank-bal').textContent=fN(bCr-bDr);
+
+  const srcBadge=s=>{
+    if(s==='sale-cash')return '<span class="badge bg2">Sale-Cash</span>';
+    if(s==='sale-card')return '<span class="badge bb2">Sale-Card</span>';
+    if(s==='sale-upi')return '<span class="badge bpu">Sale-UPI</span>';
+    return '<span class="badge bgd2">Manual</span>';
+  };
+  const headBadge=h=>{
+    if(!h||h==='General')return '—';
+    const cols={Party:'bb2',Expense:'br2',Income:'bg2'};
+    return `<span class="badge ${cols[h]||'bgd2'}">${h}</span>`;
+  };
+
+  // ── CASH BOOK ──
+  const allCashE=[...D.cashbook].filter(c=>c.book==='Cash').reverse(); // chronological
+  // Compute opening balance up-to-but-not-including cashFrom
+  let cOpenBal=obC;
+  if(cashFrom){
+    allCashE.forEach(c=>{if(c.date<cashFrom){if(c.type==='Receipt')cOpenBal+=c.amount;else cOpenBal-=c.amount;}});
+  }
+  const cashE=cashFrom||cashTo ? allCashE.filter(c=>(!cashFrom||c.date>=cashFrom)&&(!cashTo||c.date<=cashTo)) : allCashE;
+  const ct=document.getElementById('cash-tb');
+  const cr=[];let cbal=cOpenBal;
+  if(!cashFrom&&obC>0) cr.push(`<tr style="background:#fffbf0;"><td>Opening</td><td>Opening Balance</td><td>—</td><td></td><td class="nm cr">${fmt(obC)}</td><td>—</td><td class="nm cr">${fmt(cbal)}</td><td></td></tr>`);
+  if(cashFrom) cr.push(`<tr style="background:#fffbf0;"><td style="color:var(--gold);font-weight:700;">${cashFrom}</td><td style="color:var(--muted);font-size:12px;">Balance B/F</td><td>—</td><td></td><td>—</td><td>—</td><td class="nm" style="color:var(--gold);"><strong>${fmt(cbal)}</strong></td><td></td></tr>`);
+  let cPeriodCr=0,cPeriodDr=0;
+  cashE.forEach(c=>{
+    if(c.type==='Receipt'){cbal+=c.amount;cPeriodCr+=c.amount;}else{cbal-=c.amount;cPeriodDr+=c.amount;}
+    cr.push(`<tr><td>${c.date}</td><td>${c.narr}${c.party?' <small style="color:var(--bl);">['+c.party+']</small>':''}</td><td>${headBadge(c.head)}</td><td>${srcBadge(c.source)}</td><td class="nm cr">${c.type==='Receipt'?fmt(c.amount):'—'}</td><td class="nm dr">${c.type==='Payment'?fmt(c.amount):'—'}</td><td class="nm ${cbal>=0?'cr':'dr'}">${fmt(cbal)}</td><td>${c.source==='manual'?'<button class="btn bd" onclick="delCBManual('+c.id+')">✕</button>':'🔒'}</td></tr>`);
+  });
+  if(!cashE.length&&!(!cashFrom&&obC>0)) cr.push(`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:14px">${cashFrom||cashTo?'No entries in selected date range':'No entries'}</td></tr>`);
+  ct.innerHTML=cr.join('');
+  // Filter info & period totals
+  const cfi=document.getElementById('cash-filter-info');
+  const cft=document.getElementById('cash-filter-totals');
+  if(cashFrom||cashTo){
+    cfi.style.display='block';
+    cfi.innerHTML=`📅 Showing ${cashE.length} entr${cashE.length===1?'y':'ies'}${cashFrom?' from <strong>'+cashFrom+'</strong>':''}${cashTo?' to <strong>'+cashTo+'</strong>':''}`;
+    cft.style.display='flex';
+    cft.innerHTML=`<span>Period Receipts: <strong class="cr">${fmt(cPeriodCr)}</strong></span><span>Period Payments: <strong class="dr">${fmt(cPeriodDr)}</strong></span><span>Closing Balance: <strong class="${cbal>=0?'cr':'dr'}">${fmt(cbal)}</strong></span>`;
+  } else {
+    cfi.style.display='none';
+    cft.style.display='none';
+  }
+
+  // ── BANK BOOK ──
+  const allBankE=[...D.cashbook].filter(c=>c.book==='Bank').reverse();
+  let bOpenBal=obB;
+  if(bankFrom){
+    allBankE.forEach(c=>{if(c.date<bankFrom){if(c.type==='Receipt')bOpenBal+=c.amount;else bOpenBal-=c.amount;}});
+  }
+  const bankE=bankFrom||bankTo ? allBankE.filter(c=>(!bankFrom||c.date>=bankFrom)&&(!bankTo||c.date<=bankTo)) : allBankE;
+  const bt=document.getElementById('bank-tb');
+  const br=[];let bbal=bOpenBal;
+  if(!bankFrom&&obB>0) br.push(`<tr style="background:#fffbf0;"><td>Opening</td><td>Opening Balance</td><td>—</td><td></td><td>—</td><td class="nm cr">${fmt(obB)}</td><td>—</td><td class="nm cr">${fmt(bbal)}</td><td></td></tr>`);
+  if(bankFrom) br.push(`<tr style="background:#fffbf0;"><td style="color:var(--gold);font-weight:700;">${bankFrom}</td><td style="color:var(--muted);font-size:12px;">Balance B/F</td><td>—</td><td></td><td>—</td><td>—</td><td>—</td><td class="nm" style="color:var(--gold);"><strong>${fmt(bbal)}</strong></td><td></td></tr>`);
+  let bPeriodCr=0,bPeriodDr=0;
+  bankE.forEach(c=>{
+    if(c.type==='Receipt'){bbal+=c.amount;bPeriodCr+=c.amount;}else{bbal-=c.amount;bPeriodDr+=c.amount;}
+    br.push(`<tr><td>${c.date}</td><td>${c.narr}${c.party?' <small style="color:var(--bl);">['+c.party+']</small>':''}</td><td>${headBadge(c.head)}</td><td>${srcBadge(c.source)}</td><td>${c.ref||'—'}</td><td class="nm cr">${c.type==='Receipt'?fmt(c.amount):'—'}</td><td class="nm dr">${c.type==='Payment'?fmt(c.amount):'—'}</td><td class="nm ${bbal>=0?'cr':'dr'}">${fmt(bbal)}</td><td>${c.source==='manual'?'<button class="btn bd" onclick="delCBManual('+c.id+')">✕</button>':'🔒'}</td></tr>`);
+  });
+  if(!bankE.length&&!(!bankFrom&&obB>0)) br.push(`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:14px">${bankFrom||bankTo?'No entries in selected date range':'No entries'}</td></tr>`);
+  bt.innerHTML=br.join('');
+  const bfi=document.getElementById('bank-filter-info');
+  const bft=document.getElementById('bank-filter-totals');
+  if(bankFrom||bankTo){
+    bfi.style.display='block';
+    bfi.innerHTML=`📅 Showing ${bankE.length} entr${bankE.length===1?'y':'ies'}${bankFrom?' from <strong>'+bankFrom+'</strong>':''}${bankTo?' to <strong>'+bankTo+'</strong>':''}`;
+    bft.style.display='flex';
+    bft.innerHTML=`<span>Period Receipts: <strong class="cr">${fmt(bPeriodCr)}</strong></span><span>Period Payments: <strong class="dr">${fmt(bPeriodDr)}</strong></span><span>Closing Balance: <strong class="${bbal>=0?'cr':'dr'}">${fmt(bbal)}</strong></span>`;
+  } else {
+    bfi.style.display='none';
+    bft.style.display='none';
+  }
+}
+
+// ═══ P&L ═══
+function addExpense(){
+  const e={id:Date.now(),date:document.getElementById('ex-date').value,type:document.getElementById('ex-type').value,cat:document.getElementById('ex-cat').value,desc:document.getElementById('ex-desc').value,amount:parseFloat(document.getElementById('ex-amt').value)||0};
+  if(!e.date||!e.amount){alert('Fill Date and Amount');return;}
+  D.expenses.unshift(e);save();renderAll();toast('Added!');
+  ['ex-amt','ex-desc'].forEach(id=>document.getElementById(id).value='');
+}
+function delExp(id){D.expenses=D.expenses.filter(e=>e.id!==id);save();renderAll();}
+function catSum(type,cat){return D.expenses.filter(e=>e.type===type&&e.cat===cat).reduce((a,e)=>a+e.amount,0);}
+
+function renderPL(){
+  const fuelRev=D.sales.reduce((a,s)=>a+s.amount,0);
+  const incentive=catSum('Income','Incentive from BPCL');
+  const otherInc=D.expenses.filter(e=>e.type==='Income'&&e.cat!=='Incentive from BPCL').reduce((a,e)=>a+e.amount,0);
+  const gross=fuelRev+incentive+otherInc;
+
+  // ★ CHANGE 3: Cost of fuel = Sold Qty × Avg Purchase Rate (FIFO weighted average)
+  let totalFuelCost=0;
+  const fuelDetailRows=[];
+  ['MS','HSD'].forEach(f=>{
+    const soldQty=getSoldQty(f);
+    const avgRate=getAvgPurchaseRate(f);
+    const cost=soldQty*avgRate;
+    totalFuelCost+=cost;
+    const lbl=f==='MS'?'Petrol (MS)':'Diesel (HSD)';
+    fuelDetailRows.push(`<tr><td>${lbl}</td><td class="nm">${fN(soldQty)}</td><td class="nm">${fmt(avgRate)}</td><td class="nm dr"><strong>${fmt(cost)}</strong></td></tr>`);
+  });
+  const fdtb=document.getElementById('pl-fuel-detail-tb');
+  if(fdtb)fdtb.innerHTML=fuelDetailRows.join('');
+
+  const detail=document.getElementById('pl-fuel-cost-detail');
+  if(detail){
+    const msS=getSoldQty('MS'),hsdS=getSoldQty('HSD');
+    detail.textContent=`(MS: ${fN(msS)}L × ${fmt(getAvgPurchaseRate('MS'))}/L + HSD: ${fN(hsdS)}L × ${fmt(getAvgPurchaseRate('HSD'))}/L)`;
+  }
+
+  const cats={'Salary / Wages':'pl-salary','Staff Welfare':'pl-staffwelfare','Electricity':'pl-electricity','Rent':'pl-rent','Maintenance':'pl-maintenance','Insurance':'pl-insurance','Licence / Fees':'pl-licence','Printing & Stationery':'pl-printing','Miscellaneous':'pl-misc'};
+  let totalExp=totalFuelCost;
+  Object.entries(cats).forEach(([c,id])=>{const v=catSum('Expense',c);document.getElementById(id).textContent=fmt(v);totalExp+=v;});
+  document.getElementById('pl-fuel-rev').textContent=fmt(fuelRev);
+  document.getElementById('pl-incentive').textContent=fmt(incentive);
+  document.getElementById('pl-other-inc').textContent=fmt(otherInc);
+  document.getElementById('pl-gross').textContent=fmt(gross);
+  document.getElementById('pl-fuel-cost').textContent=fmt(totalFuelCost);
+  document.getElementById('pl-total-exp').textContent=fmt(totalExp);
+  const net=gross-totalExp;
+  const el=document.getElementById('pl-net');
+  el.textContent=fmt(Math.abs(net))+(net>=0?' PROFIT':' LOSS');
+  el.style.color=net>=0?'var(--gn)':'var(--rd)';
+  const tb=document.getElementById('exp-tb');
+  if(!D.expenses.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px">No entries</td></tr>';return;}
+  tb.innerHTML=D.expenses.map(e=>`<tr>
+    <td>${e.date}</td><td><span class="badge ${e.type==='Expense'?'br2':'bg2'}">${e.type}</span></td>
+    <td>${e.cat}</td><td>${e.desc||'—'}</td>
+    <td class="nm ${e.type==='Expense'?'dr':'cr'}">${fmt(e.amount)}</td>
+    <td><button class="btn bd" onclick="delExp(${e.id})">✕</button></td>
+  </tr>`).join('');
+}
+
+// ═══ AGEING ═══
+function renderAgeing(){
+  const asOn=document.getElementById('age-date').value||tod();
+  const invoices=[];
+  (D.ob.parties||[]).forEach(p=>{if(p.amount>0)invoices.push({date:'2000-01-01',party:p.name,ref:'Opening Balance',amount:p.amount,isOB:true});});
+  D.recvs.filter(r=>r.type==='Invoice').forEach(r=>invoices.push({date:r.date,party:r.party,ref:r.ref||'—',amount:r.amount}));
+  const p=getPartyBal();
+  const collLeft={};Object.entries(p).forEach(([n,v])=>{collLeft[n]=v.coll;});
+  const details=[];
+  invoices.forEach(inv=>{
+    const days=inv.isOB?daysDiff('2000-01-01',asOn):daysDiff(inv.date,asOn);
+    let rem=inv.amount;
+    if((collLeft[inv.party]||0)>0){const app=Math.min(collLeft[inv.party],rem);collLeft[inv.party]-=app;rem-=app;}
+    if(rem<0.01)return;
+    details.push({date:inv.date,party:inv.party,ref:inv.ref,amount:inv.amount,collected:inv.amount-rem,balance:rem,days,bucket:ageBucket(days),isOB:inv.isOB});
+  });
+  const bkt={b0:0,b30:0,b60:0,b90:0,b180:0};
+  details.forEach(r=>{if(r.days<=30)bkt.b0+=r.balance;else if(r.days<=60)bkt.b30+=r.balance;else if(r.days<=90)bkt.b60+=r.balance;else if(r.days<=180)bkt.b90+=r.balance;else bkt.b180+=r.balance;});
+  ['age-0-30','age-31-60','age-61-90','age-91-180','age-180p'].forEach((id,i)=>{const vals=[bkt.b0,bkt.b30,bkt.b60,bkt.b90,bkt.b180];document.getElementById(id).textContent=fmt(vals[i]);});
+  const ps={};
+  details.forEach(r=>{if(!ps[r.party])ps[r.party]={b0:0,b30:0,b60:0,b90:0,b180:0,tot:0};ps[r.party].tot+=r.balance;if(r.days<=30)ps[r.party].b0+=r.balance;else if(r.days<=60)ps[r.party].b30+=r.balance;else if(r.days<=90)ps[r.party].b60+=r.balance;else if(r.days<=180)ps[r.party].b90+=r.balance;else ps[r.party].b180+=r.balance;});
+  const at=document.getElementById('age-tb');
+  const pl=Object.entries(ps);
+  at.innerHTML=pl.length?pl.map(([n,v])=>`<tr><td><strong>${n}</strong></td><td class="nm cr">${v.b0>0?fmt(v.b0):'—'}</td><td class="nm" style="${v.b30>0?'color:var(--gold)':''}">${v.b30>0?fmt(v.b30):'—'}</td><td class="nm" style="${v.b60>0?'color:var(--primary)':''}">${v.b60>0?fmt(v.b60):'—'}</td><td class="nm dr">${v.b90>0?fmt(v.b90):'—'}</td><td class="nm" style="${v.b180>0?'color:#6a0dad':''}">${v.b180>0?fmt(v.b180):'—'}</td><td class="nm dr"><strong>${fmt(v.tot)}</strong></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">All settled</td></tr>';
+  const dt=document.getElementById('age-detail-tb');
+  dt.innerHTML=details.length?details.map(r=>`<tr style="${r.isOB?'background:#fffbf0;':''}"><td>${r.isOB?'Opening Bal':r.date}</td><td>${r.party}</td><td>${r.ref}</td><td class="nm">${fmt(r.amount)}</td><td class="nm cr">${fmt(r.collected)}</td><td class="nm dr"><strong>${fmt(r.balance)}</strong></td><td class="nm">${r.isOB?'Old':r.days+'d'}</td><td><span class="ab ${r.bucket.cls}">${r.bucket.lbl}</span></td></tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">No outstanding</td></tr>';
+}
+
+// ═══ SETTINGS ═══
+function loadSettings(){
+  document.getElementById('ob-ms').value=D.ob.ms||'';
+  document.getElementById('ob-hsd').value=D.ob.hsd||'';
+  document.getElementById('ob-ms-rate').value=D.ob.msRate||'';
+  document.getElementById('ob-hsd-rate').value=D.ob.hsdRate||'';
+  document.getElementById('ob-cash').value=D.ob.cash||'';
+  document.getElementById('ob-bank').value=D.ob.bank||'';
+  renderOBParties();
+}
+function renderOBParties(){
+  const tb=document.getElementById('ob-party-tb');
+  if(!(D.ob.parties||[]).length){tb.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:12px">No parties</td></tr>';return;}
+  tb.innerHTML=D.ob.parties.map((p,i)=>`<tr><td>${p.name}</td><td class="nm">${fmt(p.amount)}</td><td><button class="btn bd" onclick="delPartyOB(${i})">✕</button></td></tr>`).join('');
+}
+function addPartyOB(){
+  const name=document.getElementById('ob-pname').value.trim();
+  const amt=parseFloat(document.getElementById('ob-pamt').value)||0;
+  if(!name||!amt){alert('Enter party name and amount');return;}
+  if(!D.ob.parties)D.ob.parties=[];
+  const ex=D.ob.parties.findIndex(p=>p.name===name);
+  if(ex>=0)D.ob.parties[ex].amount=amt;else D.ob.parties.push({name,amount:amt});
+  document.getElementById('ob-pname').value='';document.getElementById('ob-pamt').value='';
+  save();renderAll();toast('Party opening balance saved!');
+}
+function delPartyOB(i){D.ob.parties.splice(i,1);save();renderAll();}
+function saveOB(){
+  D.ob.ms=parseFloat(document.getElementById('ob-ms').value)||0;
+  D.ob.hsd=parseFloat(document.getElementById('ob-hsd').value)||0;
+  D.ob.msRate=parseFloat(document.getElementById('ob-ms-rate').value)||0;
+  D.ob.hsdRate=parseFloat(document.getElementById('ob-hsd-rate').value)||0;
+  D.ob.cash=parseFloat(document.getElementById('ob-cash').value)||0;
+  D.ob.bank=parseFloat(document.getElementById('ob-bank').value)||0;
+  save();renderAll();toast('Opening balances saved!');
+}
+
+// ═══ DASHBOARD ═══
+function renderDashboard(){
+  const t=tod();
+  const tds=D.sales.filter(s=>s.date===t);
+  const p=getPartyBal();
+  const out=Object.values(p).reduce((a,v)=>a+v.ob+v.billed-v.coll,0);
+  const obC=D.ob.cash||0,obB=D.ob.bank||0;
+  const cCr=obC+D.cashbook.filter(c=>c.book==='Cash'&&c.type==='Receipt').reduce((a,c)=>a+c.amount,0);
+  const cDr=D.cashbook.filter(c=>c.book==='Cash'&&c.type==='Payment').reduce((a,c)=>a+c.amount,0);
+  const bCr=obB+D.cashbook.filter(c=>c.book==='Bank'&&c.type==='Receipt').reduce((a,c)=>a+c.amount,0);
+  const bDr=D.cashbook.filter(c=>c.book==='Bank'&&c.type==='Payment').reduce((a,c)=>a+c.amount,0);
+  const fuelRev=D.sales.reduce((a,s)=>a+s.amount,0);
+  const incentive=catSum('Income','Incentive from BPCL');
+  const otherInc=D.expenses.filter(e=>e.type==='Income'&&e.cat!=='Incentive from BPCL').reduce((a,e)=>a+e.amount,0);
+  const totalFuelCost=['MS','HSD'].reduce((a,f)=>a+getSoldQty(f)*getAvgPurchaseRate(f),0);
+  const expTotal=D.expenses.filter(e=>e.type==='Expense').reduce((a,e)=>a+e.amount,0);
+  const net=fuelRev+incentive+otherInc-totalFuelCost-expTotal;
+  document.getElementById('d-sales').textContent=fN(tds.reduce((a,s)=>a+s.amount,0));
+  document.getElementById('d-recv').textContent=fN(out);
+  document.getElementById('d-cash').textContent=fN(cCr-cDr);
+  document.getElementById('d-bank').textContent=fN(bCr-bDr);
+  const dp=document.getElementById('d-profit');
+  dp.textContent=fN(Math.abs(net))+(net>=0?' ▲':' ▼');
+  dp.className='sbv '+(net>=0?'gn':'rd');
+  // Fuel cards
+  document.getElementById('fuel-dash-cards').innerHTML=['MS','HSD'].map(f=>{
+    const bal=getFuelBal(f),max=FUEL_MAX[f],pct=Math.min(100,(bal/max)*100),isCrit=pct<15;
+    const lbl=f==='MS'?'⛽ Petrol (MS)':'🔵 Diesel (HSD)',col=f==='MS'?'#e85d04':'#1565c0';
+    return `<div class="sb" style="border-top-color:${col};text-align:left;cursor:default;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+        <div class="sbl" style="margin:0;">${lbl}</div>
+        <span style="font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;color:${col}">${fN(bal)} L</span>
+      </div>
+      <div class="fb-bg"><div class="fb ${isCrit?'warn':f.toLowerCase()}" style="width:${pct.toFixed(1)}%"></div></div>
+      <div class="fm"><span>${pct.toFixed(1)}% of ${max.toLocaleString()} L</span>${isCrit?'<span style="color:var(--rd);font-weight:700;">⚠️ Low!</span>':''}</div>
+    </div>`;
+  }).join('');
+  // Recent sales
+  const mmap={Cash:'bg2',Card:'bb2',UPI:'bpu',Credit:'br2'};
+  const drt=document.getElementById('dash-sales-tb');
+  const rec=D.sales.slice(0,5);
+  drt.innerHTML=rec.length?rec.map(s=>`<tr><td>${s.date}</td><td>${s.fuel}</td><td class="nm">${fN(s.qty)}</td><td class="nm cr">${fmt(s.amount)}</td><td class="nm gn">${s.cash>0?fmt(s.cash):'—'}</td><td class="nm bl">${s.card>0?fmt(s.card):'—'}</td><td class="nm" style="color:#7b1fa2">${s.upi>0?fmt(s.upi):'—'}</td><td class="nm rd">${s.credit>0?fmt(s.credit):'—'}</td></tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:14px">No sales</td></tr>';
+  // Pending receivables
+  const prec=document.getElementById('dash-recv-tb');
+  const pending=Object.entries(p).filter(([,v])=>v.ob+v.billed-v.coll>0.01).slice(0,5);
+  prec.innerHTML=pending.length?pending.map(([n,v])=>{const o=v.ob+v.billed-v.coll;const li=D.recvs.filter(r=>r.party===n&&r.type==='Invoice')[0];const days=li?daysDiff(li.date):999;const {cls}=ageBucket(days);return `<tr><td><strong>${n}</strong></td><td class="nm dr">${fmt(o)}</td><td><span class="ab ${cls}">${days<999?days+'d':'Old'}</span></td></tr>`;}).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:14px">No outstanding</td></tr>';
+}
+
+// ═══ PARTY MASTER ═══
+function addPartyMaster(){
+  const name=document.getElementById('pm-name').value.trim();
+  if(!name){alert('Party name is required');return;}
+  if(!D.parties)D.parties=[];
+  const ex=D.parties.findIndex(p=>p.name===name);
+  const obj={id:ex>=0?D.parties[ex].id:Date.now(),name,address:document.getElementById('pm-addr').value.trim(),contact:document.getElementById('pm-contact').value.trim(),gstin:document.getElementById('pm-gstin').value.trim(),notes:document.getElementById('pm-notes').value.trim()};
+  if(ex>=0)D.parties[ex]=obj;else D.parties.unshift(obj);
+  save();renderPartyMaster();toast('Party saved!');
+  ['pm-name','pm-addr','pm-contact','pm-gstin','pm-notes'].forEach(id=>document.getElementById(id).value='');
+}
+function delPartyMaster(id){D.parties=(D.parties||[]).filter(p=>p.id!==id);save();renderPartyMaster();}
+function editPartyMaster(id){
+  const p=(D.parties||[]).find(x=>x.id===id);
+  if(!p)return;
+  document.getElementById('pm-name').value=p.name||'';
+  document.getElementById('pm-addr').value=p.address||'';
+  document.getElementById('pm-contact').value=p.contact||'';
+  document.getElementById('pm-gstin').value=p.gstin||'';
+  document.getElementById('pm-notes').value=p.notes||'';
+  document.getElementById('pm-name').focus();
+  delPartyMaster(id);
+}
+function renderPartyMaster(){
+  if(!D.parties)D.parties=[];
+  const search=(document.getElementById('pm-search')||{value:''}).value.trim().toLowerCase();
+  const pbal=getPartyBal();
+  const list=D.parties.filter(p=>!search||p.name.toLowerCase().includes(search)||(p.contact||'').includes(search));
+  const tb=document.getElementById('pm-tb');
+  if(!tb)return;
+  if(!list.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No parties found</td></tr>';return;}
+  tb.innerHTML=list.map(p=>{
+    const bal=pbal[p.name]?pbal[p.name].ob+pbal[p.name].billed-pbal[p.name].coll:0;
+    return `<tr>
+      <td><strong>${p.name}</strong></td>
+      <td>${p.contact||'—'}</td>
+      <td style="font-size:12px;color:var(--text2);">${p.address||'—'}</td>
+      <td style="font-size:11px;">${p.gstin||'—'}</td>
+      <td style="font-size:12px;color:var(--text2);">${p.notes||'—'}</td>
+      <td class="nm ${bal>0?'dr':bal<0?'cr':''}">${bal!==0?fmt(bal):'—'}</td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn bo" onclick="editPartyMaster(${p.id})" style="font-size:11px;padding:3px 9px;">✏️</button>
+        <button class="btn bd" onclick="delPartyMaster(${p.id})">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══ RENDER ALL ═══
+function renderAll(){renderDashboard();renderStock();renderSales();renderReceivables();renderCashBook();renderPL();renderAgeing();loadSettings();renderPartyMaster();}
+renderAll();
+</script>
+</body>
+</html>
